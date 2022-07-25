@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>67524610705-0a4dftsenndvas42e3rn4v6addgba37n.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.67524610705-0a4dftsenndvas42e3rn4v6addgba37n</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>67524610705-d9kbandpr04net5oreechgr8ogm1nqcn.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCoaT8QJJn6122A_tjUKsO9Z6WweDteELc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>67524610705</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>systems.visualinteraction.vixroader</string>
+	<key>PROJECT_ID</key>
+	<string>vix-roader</string>
+	<key>STORAGE_BUCKET</key>
+	<string>vix-roader.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:67524610705:ios:9c0d6d0678469f8f764d30</string>
+</dict>
+</plist>
