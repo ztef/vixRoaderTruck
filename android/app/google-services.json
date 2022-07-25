@@ -1,0 +1,186 @@
+{
+  "project_info": {
+    "project_number": "67524610705",
+    "project_id": "vix-roader",
+    "storage_bucket": "vix-roader.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:67524610705:android:e70a40d6574ab0d5764d30",
+        "android_client_info": {
+          "package_name": "systems.visualinteraction.vixRoaderManager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "67524610705-d9kbandpr04net5oreechgr8ogm1nqcn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "systems.visualinteraction.vixRoaderManager",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "67524610705-oqjitt5f8cfjsenjn28caihkohgkoq1r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUrho1GLpeK0eF6X94sUxSz86NK72HbUg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "67524610705-oqjitt5f8cfjsenjn28caihkohgkoq1r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "67524610705-0a4dftsenndvas42e3rn4v6addgba37n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "systems.visualinteraction.vixroader"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:67524610705:android:3d4dc229a0b674a0764d30",
+        "android_client_info": {
+          "package_name": "systems.visualinteraction.vixroader"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "67524610705-n172rd3t7hsgl8f0h94ffsvn064r7t6v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "systems.visualinteraction.vixroader",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "67524610705-oqjitt5f8cfjsenjn28caihkohgkoq1r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUrho1GLpeK0eF6X94sUxSz86NK72HbUg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "67524610705-oqjitt5f8cfjsenjn28caihkohgkoq1r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "67524610705-0a4dftsenndvas42e3rn4v6addgba37n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "systems.visualinteraction.vixroader"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:67524610705:android:34cab9cc2a910b08764d30",
+        "android_client_info": {
+          "package_name": "systems.visualinteraction.vixroaderManager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "67524610705-lffcjjgj8fgpltm5j58imf3ivv8eonbp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "systems.visualinteraction.vixroaderManager",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "67524610705-oqjitt5f8cfjsenjn28caihkohgkoq1r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUrho1GLpeK0eF6X94sUxSz86NK72HbUg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "67524610705-oqjitt5f8cfjsenjn28caihkohgkoq1r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "67524610705-0a4dftsenndvas42e3rn4v6addgba37n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "systems.visualinteraction.vixroader"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:67524610705:android:e21bab43cbad3ccb764d30",
+        "android_client_info": {
+          "package_name": "systems.visualinteraction.vixroadermanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "67524610705-up92gltr9anq69bd28u5veg67m1e916e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "systems.visualinteraction.vixroadermanager",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "67524610705-oqjitt5f8cfjsenjn28caihkohgkoq1r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUrho1GLpeK0eF6X94sUxSz86NK72HbUg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "67524610705-oqjitt5f8cfjsenjn28caihkohgkoq1r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "67524610705-0a4dftsenndvas42e3rn4v6addgba37n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "systems.visualinteraction.vixroader"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
