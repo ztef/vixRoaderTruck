@@ -53,6 +53,7 @@ class DeviceLocation {
   static Location getLocation() {
     if (location == null) {
       location = Location();
+      location.enableBackgroundMode(enable: true);
     }
     return location;
   }
