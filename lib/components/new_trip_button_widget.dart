@@ -67,8 +67,8 @@ class _NewTripButtonWidgetState extends State<NewTripButtonWidget> {
             child: Padding(
               padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
               child: Text(
-                'Al Iniciar un nuevo viaje vixRoaderTruck recopila los datos de tu ubicación incluso cuando la App esté cerrada o no esté en uso.',
-                maxLines: 5,
+                'Al Iniciar un nuevo viaje vixRoaderTruck recopila los datos de tu ubicación incluso cuando la App esté cerrada o no esté en uso. \n\nSi es así, tu ubicación se compartirá con quien especifiques en COMPARTIR VIAJE.',
+                maxLines: 8,
                 style: FlutterFlowTheme.of(context).bodyText1.override(
                       fontFamily: 'Poppins',
                       fontWeight: FontWeight.w300,
