@@ -68,11 +68,21 @@ class _MainWidgetState extends State<MainWidget> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Image.network(
-                  'https://picsum.photos/seed/266/600',
+                Image.asset(
+                  'assets/images/unnamed.png',
                   width: double.infinity,
                   height: 200,
                   fit: BoxFit.cover,
+                ),
+                Align(
+                  alignment: AlignmentDirectional(-0.95, 0),
+                  child: Text(
+                    'vixRoaderTruck 0.3',
+                    style: TextStyle(
+                      color: FlutterFlowTheme.of(context).grayIcon,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
                 ),
                 InkWell(
                   onTap: () async {
@@ -152,6 +162,7 @@ class _MainWidgetState extends State<MainWidget> {
                     dense: false,
                   ),
                 ),
+                Divider(),
                 InkWell(
                   onTap: () async {
                     await signOut();
@@ -179,6 +190,24 @@ class _MainWidgetState extends State<MainWidget> {
                     tileColor: Color(0xFFF5F5F5),
                     dense: false,
                   ),
+                ),
+                Divider(),
+                ListTile(
+                  title: Text(
+                    'Configuración',
+                    style: FlutterFlowTheme.of(context).title3,
+                  ),
+                  subtitle: Text(
+                    'Configuración y Privacidad',
+                    style: FlutterFlowTheme.of(context).bodyText2,
+                  ),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    color: Color(0xFF303030),
+                    size: 20,
+                  ),
+                  tileColor: Color(0xFFF5F5F5),
+                  dense: false,
                 ),
               ],
             ),

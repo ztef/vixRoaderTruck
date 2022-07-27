@@ -32,76 +32,60 @@ class _TripLogViewWidgetState extends State<TripLogViewWidget> {
           );
         }
         final columnTripsRecord = snapshot.data;
-        return Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(7, 0, 7, 0),
-              child: Container(
-                width: double.infinity,
-                height: 30,
-                decoration: BoxDecoration(
-                  color: FlutterFlowTheme.of(context).lineColor,
-                ),
-                child: Text(
-                  'Bitácora',
-                  textAlign: TextAlign.center,
-                  style: FlutterFlowTheme.of(context).bodyText1.override(
-                        fontFamily: 'Poppins',
-                        color: FlutterFlowTheme.of(context).primaryColor,
-                      ),
+        return SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(7, 0, 7, 0),
+                child: Container(
+                  width: double.infinity,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    color: FlutterFlowTheme.of(context).lineColor,
+                  ),
+                  child: Text(
+                    'Bitácora',
+                    textAlign: TextAlign.center,
+                    style: FlutterFlowTheme.of(context).bodyText1.override(
+                          fontFamily: 'Poppins',
+                          color: FlutterFlowTheme.of(context).primaryColor,
+                        ),
+                  ),
                 ),
               ),
-            ),
-            Builder(
-              builder: (context) {
-                final lista = functions
-                        .jsonListParser(columnTripsRecord.log)
-                        .map((e) => getJsonField(
-                              e,
-                              r'''$''',
-                            ))
-                        .toList()
-                        ?.toList() ??
-                    [];
-                return ListView.builder(
-                  padding: EdgeInsets.zero,
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  itemCount: lista.length,
-                  itemBuilder: (context, listaIndex) {
-                    final listaItem = lista[listaIndex];
-                    return Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(7, 5, 7, 5),
-                      child: Card(
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        color: FlutterFlowTheme.of(context).primaryBtnText,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Text(
-                                  dateTimeFormat(
-                                      'd/M/y',
-                                      functions.string2Date(getJsonField(
-                                        listaItem,
-                                        r'''$.time''',
-                                      ).toString())),
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyText1
-                                      .override(
-                                        fontFamily: 'Poppins',
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      10, 0, 0, 0),
-                                  child: Text(
+              Builder(
+                builder: (context) {
+                  final lista = functions
+                          .jsonListParser(columnTripsRecord.log)
+                          .map((e) => getJsonField(
+                                e,
+                                r'''$''',
+                              ))
+                          .toList()
+                          ?.toList() ??
+                      [];
+                  return ListView.builder(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    itemCount: lista.length,
+                    itemBuilder: (context, listaIndex) {
+                      final listaItem = lista[listaIndex];
+                      return Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(7, 5, 7, 5),
+                        child: Card(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          color: FlutterFlowTheme.of(context).primaryBtnText,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Text(
                                     dateTimeFormat(
-                                        'jm',
+                                        'd/M/y',
                                         functions.string2Date(getJsonField(
                                           listaItem,
                                           r'''$.time''',
@@ -113,33 +97,16 @@ class _TripLogViewWidgetState extends State<TripLogViewWidget> {
                                           fontWeight: FontWeight.normal,
                                         ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      10, 0, 0, 0),
-                                  child: Container(
-                                    width: 25,
-                                    height: 25,
-                                    child: custom_widgets.GetPauseIcon(
-                                      width: 25,
-                                      height: 25,
-                                      reason: getJsonField(
-                                        listaItem,
-                                        r'''$.reason''',
-                                      ).toString(),
-                                    ),
-                                  ),
-                                ),
-                                Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      functions
-                                          .verboseStringStatus(getJsonField(
-                                        listaItem,
-                                        r'''$.status''',
-                                      ).toString()),
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        10, 0, 0, 0),
+                                    child: Text(
+                                      dateTimeFormat(
+                                          'jm',
+                                          functions.string2Date(getJsonField(
+                                            listaItem,
+                                            r'''$.time''',
+                                          ).toString())),
                                       style: FlutterFlowTheme.of(context)
                                           .bodyText1
                                           .override(
@@ -147,13 +114,34 @@ class _TripLogViewWidgetState extends State<TripLogViewWidget> {
                                             fontWeight: FontWeight.normal,
                                           ),
                                     ),
-                                    Align(
-                                      alignment: AlignmentDirectional(-0.05, 0),
-                                      child: Text(
-                                        getJsonField(
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        10, 0, 0, 0),
+                                    child: Container(
+                                      width: 25,
+                                      height: 25,
+                                      child: custom_widgets.GetPauseIcon(
+                                        width: 25,
+                                        height: 25,
+                                        reason: getJsonField(
                                           listaItem,
-                                          r'''$.desc''',
+                                          r'''$.reason''',
                                         ).toString(),
+                                      ),
+                                    ),
+                                  ),
+                                  Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        functions
+                                            .verboseStringStatus(getJsonField(
+                                          listaItem,
+                                          r'''$.status''',
+                                        ).toString()),
                                         style: FlutterFlowTheme.of(context)
                                             .bodyText1
                                             .override(
@@ -161,20 +149,36 @@ class _TripLogViewWidgetState extends State<TripLogViewWidget> {
                                               fontWeight: FontWeight.normal,
                                             ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
+                                      Align(
+                                        alignment:
+                                            AlignmentDirectional(-0.05, 0),
+                                        child: Text(
+                                          getJsonField(
+                                            listaItem,
+                                            r'''$.desc''',
+                                          ).toString(),
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyText1
+                                              .override(
+                                                fontFamily: 'Poppins',
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ],
+                      );
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
         );
       },
     );
