@@ -153,6 +153,41 @@ class _$TripsRecordSerializer implements StructuredSerializer<TripsRecord> {
         ..add(
             serializers.serialize(value, specifiedType: const FullType(bool)));
     }
+    value = object.positionOrig;
+    if (value != null) {
+      result
+        ..add('positionOrig')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(LatLng)));
+    }
+    value = object.postitionZero;
+    if (value != null) {
+      result
+        ..add('postitionZero')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(LatLng)));
+    }
+    value = object.usePositionZero;
+    if (value != null) {
+      result
+        ..add('usePositionZero')
+        ..add(
+            serializers.serialize(value, specifiedType: const FullType(bool)));
+    }
+    value = object.route;
+    if (value != null) {
+      result
+        ..add('route')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
+    value = object.distance;
+    if (value != null) {
+      result
+        ..add('distance')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(double)));
+    }
     value = object.reference;
     if (value != null) {
       result
@@ -253,6 +288,26 @@ class _$TripsRecordSerializer implements StructuredSerializer<TripsRecord> {
           result.onRoute = serializers.deserialize(value,
               specifiedType: const FullType(bool)) as bool;
           break;
+        case 'positionOrig':
+          result.positionOrig = serializers.deserialize(value,
+              specifiedType: const FullType(LatLng)) as LatLng;
+          break;
+        case 'postitionZero':
+          result.postitionZero = serializers.deserialize(value,
+              specifiedType: const FullType(LatLng)) as LatLng;
+          break;
+        case 'usePositionZero':
+          result.usePositionZero = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool;
+          break;
+        case 'route':
+          result.route = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'distance':
+          result.distance = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double;
+          break;
         case 'Document__Reference__Field':
           result.reference = serializers.deserialize(value,
                   specifiedType: const FullType(
@@ -306,10 +361,20 @@ class _$TripsRecord extends TripsRecord {
   @override
   final bool onRoute;
   @override
+  final LatLng positionOrig;
+  @override
+  final LatLng postitionZero;
+  @override
+  final bool usePositionZero;
+  @override
+  final String route;
+  @override
+  final double distance;
+  @override
   final DocumentReference<Object> reference;
 
   factory _$TripsRecord([void Function(TripsRecordBuilder) updates]) =>
-      (new TripsRecordBuilder()..update(updates)).build();
+      (new TripsRecordBuilder()..update(updates))._build();
 
   _$TripsRecord._(
       {this.tripId,
@@ -331,6 +396,11 @@ class _$TripsRecord extends TripsRecord {
       this.status,
       this.positionDest,
       this.onRoute,
+      this.positionOrig,
+      this.postitionZero,
+      this.usePositionZero,
+      this.route,
+      this.distance,
       this.reference})
       : super._();
 
@@ -364,6 +434,11 @@ class _$TripsRecord extends TripsRecord {
         status == other.status &&
         positionDest == other.positionDest &&
         onRoute == other.onRoute &&
+        positionOrig == other.positionOrig &&
+        postitionZero == other.postitionZero &&
+        usePositionZero == other.usePositionZero &&
+        route == other.route &&
+        distance == other.distance &&
         reference == other.reference;
   }
 
@@ -387,31 +462,31 @@ class _$TripsRecord extends TripsRecord {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc(0, tripId.hashCode),
-                                                                                destination.hashCode),
-                                                                            date.hashCode),
-                                                                        uid.hashCode),
-                                                                    customer.hashCode),
-                                                                load.hashCode),
-                                                            unit.hashCode),
-                                                        active.hashCode),
-                                                    log.hashCode),
-                                                lastStatus.hashCode),
-                                            shareWith.hashCode),
-                                        position.hashCode),
-                                    positionTime.hashCode),
-                                geodata.hashCode),
-                            lat.hashCode),
-                        long.hashCode),
-                    status.hashCode),
-                positionDest.hashCode),
-            onRoute.hashCode),
+                                                                            $jc($jc($jc($jc($jc($jc($jc(0, tripId.hashCode), destination.hashCode), date.hashCode), uid.hashCode), customer.hashCode), load.hashCode),
+                                                                                unit.hashCode),
+                                                                            active.hashCode),
+                                                                        log.hashCode),
+                                                                    lastStatus.hashCode),
+                                                                shareWith.hashCode),
+                                                            position.hashCode),
+                                                        positionTime.hashCode),
+                                                    geodata.hashCode),
+                                                lat.hashCode),
+                                            long.hashCode),
+                                        status.hashCode),
+                                    positionDest.hashCode),
+                                onRoute.hashCode),
+                            positionOrig.hashCode),
+                        postitionZero.hashCode),
+                    usePositionZero.hashCode),
+                route.hashCode),
+            distance.hashCode),
         reference.hashCode));
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('TripsRecord')
+    return (newBuiltValueToStringHelper(r'TripsRecord')
           ..add('tripId', tripId)
           ..add('destination', destination)
           ..add('date', date)
@@ -431,6 +506,11 @@ class _$TripsRecord extends TripsRecord {
           ..add('status', status)
           ..add('positionDest', positionDest)
           ..add('onRoute', onRoute)
+          ..add('positionOrig', positionOrig)
+          ..add('postitionZero', postitionZero)
+          ..add('usePositionZero', usePositionZero)
+          ..add('route', route)
+          ..add('distance', distance)
           ..add('reference', reference))
         .toString();
   }
@@ -517,6 +597,28 @@ class TripsRecordBuilder implements Builder<TripsRecord, TripsRecordBuilder> {
   bool get onRoute => _$this._onRoute;
   set onRoute(bool onRoute) => _$this._onRoute = onRoute;
 
+  LatLng _positionOrig;
+  LatLng get positionOrig => _$this._positionOrig;
+  set positionOrig(LatLng positionOrig) => _$this._positionOrig = positionOrig;
+
+  LatLng _postitionZero;
+  LatLng get postitionZero => _$this._postitionZero;
+  set postitionZero(LatLng postitionZero) =>
+      _$this._postitionZero = postitionZero;
+
+  bool _usePositionZero;
+  bool get usePositionZero => _$this._usePositionZero;
+  set usePositionZero(bool usePositionZero) =>
+      _$this._usePositionZero = usePositionZero;
+
+  String _route;
+  String get route => _$this._route;
+  set route(String route) => _$this._route = route;
+
+  double _distance;
+  double get distance => _$this._distance;
+  set distance(double distance) => _$this._distance = distance;
+
   DocumentReference<Object> _reference;
   DocumentReference<Object> get reference => _$this._reference;
   set reference(DocumentReference<Object> reference) =>
@@ -548,6 +650,11 @@ class TripsRecordBuilder implements Builder<TripsRecord, TripsRecordBuilder> {
       _status = $v.status;
       _positionDest = $v.positionDest;
       _onRoute = $v.onRoute;
+      _positionOrig = $v.positionOrig;
+      _postitionZero = $v.postitionZero;
+      _usePositionZero = $v.usePositionZero;
+      _route = $v.route;
+      _distance = $v.distance;
       _reference = $v.reference;
       _$v = null;
     }
@@ -566,7 +673,9 @@ class TripsRecordBuilder implements Builder<TripsRecord, TripsRecordBuilder> {
   }
 
   @override
-  _$TripsRecord build() {
+  TripsRecord build() => _build();
+
+  _$TripsRecord _build() {
     final _$result = _$v ??
         new _$TripsRecord._(
             tripId: tripId,
@@ -588,10 +697,15 @@ class TripsRecordBuilder implements Builder<TripsRecord, TripsRecordBuilder> {
             status: status,
             positionDest: positionDest,
             onRoute: onRoute,
+            positionOrig: positionOrig,
+            postitionZero: postitionZero,
+            usePositionZero: usePositionZero,
+            route: route,
+            distance: distance,
             reference: reference);
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,deprecated_member_use_from_same_package,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,deprecated_member_use_from_same_package,lines_longer_than_80_chars,no_leading_underscores_for_local_identifiers,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new,unnecessary_lambdas

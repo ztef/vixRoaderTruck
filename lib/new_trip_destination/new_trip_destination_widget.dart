@@ -8,7 +8,6 @@ import '../flutter_flow/flutter_flow_widgets.dart';
 import '../flutter_flow/place.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class NewTripDestinationWidget extends StatefulWidget {
@@ -30,12 +29,28 @@ class _NewTripDestinationWidgetState extends State<NewTripDestinationWidget> {
     return Scaffold(
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: FlutterFlowTheme.of(context).primaryColor,
-        automaticallyImplyLeading: true,
-        actions: [],
-        centerTitle: true,
-        elevation: 4,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(40),
+        child: AppBar(
+          backgroundColor: FlutterFlowTheme.of(context).primaryColor,
+          automaticallyImplyLeading: false,
+          leading: FlutterFlowIconButton(
+            borderColor: Colors.transparent,
+            borderRadius: 30,
+            borderWidth: 1,
+            buttonSize: 60,
+            icon: Icon(
+              Icons.arrow_back_rounded,
+              color: Colors.white,
+              size: 30,
+            ),
+            onPressed: () {
+              print('IconButton pressed ...');
+            },
+          ),
+          actions: [],
+          elevation: 2,
+        ),
       ),
       backgroundColor: Color(0xFFEFEFEF),
       body: Column(
@@ -68,57 +83,29 @@ class _NewTripDestinationWidgetState extends State<NewTripDestinationWidget> {
                 ),
                 Align(
                   alignment: AlignmentDirectional(0, -0.99),
-                  child: FlutterFlowPlacePicker(
-                    iOSGoogleMapsApiKey:
-                        'AIzaSyCoaT8QJJn6122A_tjUKsO9Z6WweDteELc',
-                    androidGoogleMapsApiKey:
-                        'AIzaSyDUrho1GLpeK0eF6X94sUxSz86NK72HbUg',
-                    webGoogleMapsApiKey:
-                        'AIzaSyBu2GzkodpROm87tn0F2y6ESCXSMh46HEE',
-                    onSelect: (place) async {
-                      setState(() => placePickerValue = place);
-                      (await googleMapsController.future).animateCamera(
-                          CameraUpdate.newLatLng(place.latLng.toGoogleMaps()));
-                    },
-                    defaultText: 'Selecciona tu Destino',
-                    icon: Icon(
-                      Icons.place,
-                      color: Colors.white,
-                      size: 16,
-                    ),
-                    buttonOptions: FFButtonOptions(
-                      width: double.infinity,
-                      height: 40,
-                      color: FlutterFlowTheme.of(context).primaryColor,
-                      textStyle:
-                          FlutterFlowTheme.of(context).subtitle2.override(
-                                fontFamily: 'Poppins',
-                                color: Colors.white,
-                              ),
-                      borderSide: BorderSide(
-                        color: Colors.transparent,
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                ),
-                if ((placePickerValue.name != null &&
-                    placePickerValue.name != ''))
-                  Align(
-                    alignment: AlignmentDirectional(0.02, -0.8),
-                    child: FFButtonWidget(
-                      onPressed: () async {
-                        await googleMapsController.future.then(
-                          (c) => c.animateCamera(
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
+                    child: FlutterFlowPlacePicker(
+                      iOSGoogleMapsApiKey:
+                          'AIzaSyCoaT8QJJn6122A_tjUKsO9Z6WweDteELc',
+                      androidGoogleMapsApiKey:
+                          'AIzaSyDUrho1GLpeK0eF6X94sUxSz86NK72HbUg',
+                      webGoogleMapsApiKey:
+                          'AIzaSyBu2GzkodpROm87tn0F2y6ESCXSMh46HEE',
+                      onSelect: (place) async {
+                        setState(() => placePickerValue = place);
+                        (await googleMapsController.future).animateCamera(
                             CameraUpdate.newLatLng(
-                                placePickerValue.latLng.toGoogleMaps()),
-                          ),
-                        );
+                                place.latLng.toGoogleMaps()));
                       },
-                      text: 'Ver en el Mapa ',
-                      options: FFButtonOptions(
-                        width: 160,
+                      defaultText: 'Selecciona tu Destino',
+                      icon: Icon(
+                        Icons.search,
+                        color: Colors.white,
+                        size: 16,
+                      ),
+                      buttonOptions: FFButtonOptions(
+                        width: double.infinity,
                         height: 40,
                         color: FlutterFlowTheme.of(context).primaryColor,
                         textStyle:
@@ -131,6 +118,45 @@ class _NewTripDestinationWidgetState extends State<NewTripDestinationWidget> {
                           width: 1,
                         ),
                         borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+                if ((placePickerValue.name != null &&
+                    placePickerValue.name != ''))
+                  Align(
+                    alignment: AlignmentDirectional(0.02, -0.8),
+                    child: Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
+                      child: FFButtonWidget(
+                        onPressed: () async {
+                          await googleMapsController.future.then(
+                            (c) => c.animateCamera(
+                              CameraUpdate.newLatLng(
+                                  placePickerValue.latLng.toGoogleMaps()),
+                            ),
+                          );
+                        },
+                        text: 'Ver en el Mapa ',
+                        icon: Icon(
+                          Icons.remove_red_eye,
+                          size: 15,
+                        ),
+                        options: FFButtonOptions(
+                          width: double.infinity,
+                          height: 40,
+                          color: FlutterFlowTheme.of(context).primaryColor,
+                          textStyle:
+                              FlutterFlowTheme.of(context).subtitle2.override(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.white,
+                                  ),
+                          borderSide: BorderSide(
+                            color: Colors.transparent,
+                            width: 1,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     ),
                   ),
@@ -157,35 +183,40 @@ class _NewTripDestinationWidgetState extends State<NewTripDestinationWidget> {
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          placePickerValue.name,
-                          style: FlutterFlowTheme.of(context).bodyText1,
-                        ),
-                        Text(
-                          placePickerValue.address.maybeHandleOverflow(
-                            maxChars: 30,
-                            replacement: '…',
+                    Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            placePickerValue.name,
+                            style: FlutterFlowTheme.of(context).bodyText1,
                           ),
-                          maxLines: 2,
-                          style: FlutterFlowTheme.of(context).bodyText1,
-                        ),
-                        Text(
-                          placePickerValue.city,
-                          style: FlutterFlowTheme.of(context).bodyText1,
-                        ),
-                      ],
+                          Text(
+                            placePickerValue.address.maybeHandleOverflow(
+                              maxChars: 30,
+                              replacement: '…',
+                            ),
+                            maxLines: 2,
+                            style: FlutterFlowTheme.of(context).bodyText1,
+                          ),
+                          Text(
+                            placePickerValue.city,
+                            style: FlutterFlowTheme.of(context).bodyText1,
+                          ),
+                        ],
+                      ),
                     ),
                     if ((placePickerValue.name != null &&
                         placePickerValue.name != ''))
                       Align(
                         alignment: AlignmentDirectional(0.53, -0.7),
                         child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 5, 5, 0),
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 20, 25, 0),
                           child: FlutterFlowIconButton(
                             borderColor: Colors.transparent,
                             borderRadius: 30,
@@ -193,9 +224,9 @@ class _NewTripDestinationWidgetState extends State<NewTripDestinationWidget> {
                             buttonSize: 60,
                             fillColor:
                                 FlutterFlowTheme.of(context).primaryColor,
-                            icon: FaIcon(
-                              FontAwesomeIcons.angleDoubleRight,
-                              color: FlutterFlowTheme.of(context).primaryText,
+                            icon: Icon(
+                              Icons.done,
+                              color: FlutterFlowTheme.of(context).white,
                               size: 30,
                             ),
                             onPressed: () async {

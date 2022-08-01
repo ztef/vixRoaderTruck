@@ -41,6 +41,9 @@ abstract class UsersRecord implements Built<UsersRecord, UsersRecordBuilder> {
   bool get onTrip;
 
   @nullable
+  DocumentReference get trip;
+
+  @nullable
   @BuiltValueField(wireName: kDocumentReferenceField)
   DocumentReference get reference;
 
@@ -83,6 +86,7 @@ Map<String, dynamic> createUsersRecordData({
   String phoneNumber,
   DocumentReference shareTripsWith,
   bool onTrip,
+  DocumentReference trip,
 }) =>
     serializers.toFirestore(
         UsersRecord.serializer,
@@ -95,4 +99,5 @@ Map<String, dynamic> createUsersRecordData({
           ..phoneNumber = phoneNumber
           ..trips = null
           ..shareTripsWith = shareTripsWith
-          ..onTrip = onTrip));
+          ..onTrip = onTrip
+          ..trip = trip));

@@ -1,8 +1,7 @@
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
-import '../new_trip_destination/new_trip_destination_widget.dart';
-import '../flutter_flow/custom_functions.dart' as functions;
+import '../set_origin_dest/set_origin_dest_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -19,43 +18,41 @@ class _NewTripButtonWidgetState extends State<NewTripButtonWidget> {
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
-        if (!(functions.isActiveTrip(FFAppState().tripStatus)) ?? true)
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(15, 0, 15, 0),
-                  child: FFButtonWidget(
-                    onPressed: () async {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => NewTripDestinationWidget(),
-                        ),
-                      );
-                    },
-                    text: 'Iniciar Viaje',
-                    options: FFButtonOptions(
-                      width: 130,
-                      height: 40,
-                      color: FlutterFlowTheme.of(context).primaryColor,
-                      textStyle:
-                          FlutterFlowTheme.of(context).subtitle2.override(
-                                fontFamily: 'Poppins',
-                                color: Colors.white,
-                              ),
-                      borderSide: BorderSide(
-                        color: Colors.transparent,
-                        width: 1,
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(15, 0, 15, 0),
+                child: FFButtonWidget(
+                  onPressed: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SetOriginDestWidget(),
                       ),
-                      borderRadius: BorderRadius.circular(8),
+                    );
+                  },
+                  text: 'Iniciar Viaje',
+                  options: FFButtonOptions(
+                    width: 130,
+                    height: 40,
+                    color: FlutterFlowTheme.of(context).primaryColor,
+                    textStyle: FlutterFlowTheme.of(context).subtitle2.override(
+                          fontFamily: 'Poppins',
+                          color: Colors.white,
+                        ),
+                    borderSide: BorderSide(
+                      color: Colors.transparent,
+                      width: 1,
                     ),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
+        ),
         Padding(
           padding: EdgeInsetsDirectional.fromSTEB(20, 20, 20, 20),
           child: Card(
@@ -71,6 +68,7 @@ class _NewTripButtonWidgetState extends State<NewTripButtonWidget> {
                 maxLines: 8,
                 style: FlutterFlowTheme.of(context).bodyText1.override(
                       fontFamily: 'Poppins',
+                      color: Colors.black,
                       fontWeight: FontWeight.w300,
                     ),
               ),

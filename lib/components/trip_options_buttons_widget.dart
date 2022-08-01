@@ -5,11 +5,17 @@ import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 import '../custom_code/actions/index.dart' as actions;
 import '../flutter_flow/custom_functions.dart' as functions;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TripOptionsButtonsWidget extends StatefulWidget {
-  const TripOptionsButtonsWidget({Key key}) : super(key: key);
+  const TripOptionsButtonsWidget({
+    Key key,
+    this.trip,
+  }) : super(key: key);
+
+  final DocumentReference trip;
 
   @override
   _TripOptionsButtonsWidgetState createState() =>
@@ -42,64 +48,75 @@ class _TripOptionsButtonsWidgetState extends State<TripOptionsButtonsWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Expanded(
-                child: FFButtonWidget(
-                  onPressed: () async {
-                    await showModalBottomSheet(
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                      context: context,
-                      builder: (context) {
-                        return Padding(
-                          padding: MediaQuery.of(context).viewInsets,
-                          child: Container(
-                            height: MediaQuery.of(context).size.height * 0.7,
-                            child: PauseReasonSelectorWidget(),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  text: 'Registrar Pausa',
-                  options: FFButtonOptions(
-                    width: 130,
-                    height: 40,
-                    color: FlutterFlowTheme.of(context).primaryColor,
-                    textStyle: FlutterFlowTheme.of(context).subtitle2.override(
-                          fontFamily: 'Poppins',
-                          color: FlutterFlowTheme.of(context).primaryBtnText,
-                        ),
-                    borderSide: BorderSide(
-                      color: Colors.transparent,
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-              if (!(rowTripsRecord.onRoute) ?? true)
-                Expanded(
+                child: Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0, 0, 5, 0),
                   child: FFButtonWidget(
                     onPressed: () async {
-                      await actions.setRoute(
-                        context,
-                        functions.jsonListParser(rowTripsRecord.log).toList(),
+                      await showModalBottomSheet(
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        context: context,
+                        builder: (context) {
+                          return Padding(
+                            padding: MediaQuery.of(context).viewInsets,
+                            child: Container(
+                              height: MediaQuery.of(context).size.height * 0.7,
+                              child: PauseReasonSelectorWidget(),
+                            ),
+                          );
+                        },
                       );
                     },
-                    text: 'Poner en Ruta',
+                    text: 'Registrar Pausa',
                     options: FFButtonOptions(
                       width: 130,
                       height: 40,
                       color: FlutterFlowTheme.of(context).primaryColor,
-                      textStyle:
-                          FlutterFlowTheme.of(context).subtitle2.override(
-                                fontFamily: 'Poppins',
-                                color: Colors.white,
-                              ),
+                      textStyle: FlutterFlowTheme.of(context)
+                          .subtitle2
+                          .override(
+                            fontFamily: 'Poppins',
+                            color: FlutterFlowTheme.of(context).primaryBtnText,
+                            fontSize: 13,
+                          ),
                       borderSide: BorderSide(
                         color: Colors.transparent,
                         width: 1,
                       ),
                       borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              ),
+              if (!rowTripsRecord.onRoute)
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(5, 0, 0, 0),
+                    child: FFButtonWidget(
+                      onPressed: () async {
+                        await actions.setRoute(
+                          context,
+                          functions.jsonListParser(rowTripsRecord.log).toList(),
+                        );
+                      },
+                      text: 'Poner en Ruta',
+                      options: FFButtonOptions(
+                        width: 130,
+                        height: 40,
+                        color: FlutterFlowTheme.of(context).primaryColor,
+                        textStyle:
+                            FlutterFlowTheme.of(context).subtitle2.override(
+                                  fontFamily: 'Poppins',
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                        borderSide: BorderSide(
+                          color: Colors.transparent,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                   ),
                 ),

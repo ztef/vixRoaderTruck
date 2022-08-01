@@ -13,9 +13,9 @@ class CurrentLocationWidget extends StatefulWidget {
 }
 
 class _CurrentLocationWidgetState extends State<CurrentLocationWidget> {
+  LatLng currentUserLocationValue;
   LatLng googleMapsCenter;
   final googleMapsController = Completer<GoogleMapController>();
-  LatLng currentUserLocationValue;
 
   @override
   void initState() {

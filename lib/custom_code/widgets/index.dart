@@ -12,4 +12,6 @@ export 'test.dart' show Test;
 export 'trip_timer.dart' show TripTimer;
 export 'trip_map.dart' show TripMap;
 export 'trip_map_track.dart' show TripMapTrack;
+export 'pre_view_trip_map.dart' show PreViewTripMap;
+export 'trip_navigator_map.dart' show TripNavigatorMap;
 export 'aux_classes.dart' show AuxClasses;

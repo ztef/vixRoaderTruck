@@ -109,6 +109,10 @@ class FFAppState {
   bool onRoute = false;
 
   bool onTrip = false;
+
+  String route = '';
+
+  double distance = 0.0;
 }
 
 LatLng _latLngFromString(String val) {

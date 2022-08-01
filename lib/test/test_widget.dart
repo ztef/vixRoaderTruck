@@ -1,6 +1,7 @@
 import '../backend/backend.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
+import '../flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -66,9 +67,9 @@ class _TestWidgetState extends State<TestWidget> {
                       ),
                       child: Container(
                         width: double.infinity,
-                        height: 32,
+                        height: 60,
                         decoration: BoxDecoration(
-                          color: FlutterFlowTheme.of(context).primaryColor,
+                          color: Color(0xFFD2D2D2),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.white,
@@ -95,7 +96,7 @@ class _TestWidgetState extends State<TestWidget> {
                                   children: [
                                     Container(
                                       width: 110,
-                                      height: 20,
+                                      height: 40,
                                       decoration: BoxDecoration(
                                         color: Colors.green,
                                         borderRadius: BorderRadius.circular(8),
@@ -143,7 +144,7 @@ class _TestWidgetState extends State<TestWidget> {
                                     ),
                                     Container(
                                       width: 110,
-                                      height: 20,
+                                      height: 40,
                                       decoration: BoxDecoration(
                                         color: Color(0xFFFF0000),
                                         borderRadius: BorderRadius.circular(8),
@@ -181,10 +182,54 @@ class _TestWidgetState extends State<TestWidget> {
                                   ],
                                 ),
                               ),
+                              FFButtonWidget(
+                                onPressed: () {
+                                  print('Button pressed ...');
+                                },
+                                text: 'Button',
+                                options: FFButtonOptions(
+                                  width: 130,
+                                  height: 40,
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryColor,
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .subtitle2
+                                      .override(
+                                        fontFamily: 'Poppins',
+                                        color: Colors.white,
+                                      ),
+                                  borderSide: BorderSide(
+                                    color: Colors.transparent,
+                                    width: 1,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
                             ],
                           ),
                         ),
                       ),
+                    ),
+                  ),
+                  FFButtonWidget(
+                    onPressed: () {
+                      print('Button pressed ...');
+                    },
+                    text: 'Button',
+                    options: FFButtonOptions(
+                      width: 130,
+                      height: 40,
+                      color: FlutterFlowTheme.of(context).primaryColor,
+                      textStyle:
+                          FlutterFlowTheme.of(context).subtitle2.override(
+                                fontFamily: 'Poppins',
+                                color: Colors.white,
+                              ),
+                      borderSide: BorderSide(
+                        color: Colors.transparent,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                 ],

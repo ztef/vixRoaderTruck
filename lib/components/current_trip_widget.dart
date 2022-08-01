@@ -72,7 +72,7 @@ class _CurrentTripWidgetState extends State<CurrentTripWidget>
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
+      padding: EdgeInsetsDirectional.fromSTEB(3, 0, 3, 12),
       child: StreamBuilder<TripsRecord>(
         stream: TripsRecord.getDocument(widget.trip),
         builder: (context, snapshot) {
@@ -107,7 +107,7 @@ class _CurrentTripWidgetState extends State<CurrentTripWidget>
               mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(5, 5, 5, 5),
+                  padding: EdgeInsetsDirectional.fromSTEB(15, 10, 15, 0),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [

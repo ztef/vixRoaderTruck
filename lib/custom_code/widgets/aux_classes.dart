@@ -70,7 +70,7 @@ class SpeedMonitor {
   static Widget printSpeed(rt, pt, context, v, p) {
     if (pt) {
       dtFlag = false;
-      if (v > 10) {
+      if (v > 20) {
         // Pone en RUTA automatica
         _setAutoRoute();
         _showSpeedDialog(context);

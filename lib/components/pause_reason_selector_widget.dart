@@ -24,7 +24,7 @@ class _PauseReasonSelectorWidgetState extends State<PauseReasonSelectorWidget> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).secondaryBackground,
+        color: Colors.white,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -33,21 +33,27 @@ class _PauseReasonSelectorWidgetState extends State<PauseReasonSelectorWidget> {
             width: double.infinity,
             height: 50,
             decoration: BoxDecoration(
-              color: Color(0xFFEEEEEE),
+              color: Colors.white,
             ),
-            child: Text(
-              'Motivo de la Pausa',
-              style: FlutterFlowTheme.of(context).bodyText1,
+            child: Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+              child: Text(
+                'Motivo de la Pausa',
+                textAlign: TextAlign.center,
+                style: FlutterFlowTheme.of(context).bodyText1.override(
+                      fontFamily: 'Poppins',
+                      fontSize: 18,
+                    ),
+              ),
             ),
           ),
           Expanded(
             child: Builder(
               builder: (context) {
                 final opciones = getJsonField(
-                      FFAppState().pauseOptions,
-                      r'''$''',
-                    )?.toList() ??
-                    [];
+                  FFAppState().pauseOptions,
+                  r'''$''',
+                ).toList();
                 return ListView.builder(
                   padding: EdgeInsets.zero,
                   shrinkWrap: true,
@@ -59,7 +65,7 @@ class _PauseReasonSelectorWidgetState extends State<PauseReasonSelectorWidget> {
                       width: 100,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: Color(0xFFEEEEEE),
+                        color: Colors.white,
                       ),
                       child: InkWell(
                         onTap: () async {
@@ -107,42 +113,45 @@ class _PauseReasonSelectorWidgetState extends State<PauseReasonSelectorWidget> {
               },
             ),
           ),
-          FFButtonWidget(
-            onPressed: () async {
-              await actions.setEnd(
-                context,
-              );
+          Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(20, 0, 20, 20),
+            child: FFButtonWidget(
+              onPressed: () async {
+                await actions.setEnd(
+                  context,
+                );
 
-              final usersUpdateData = createUsersRecordData(
-                onTrip: false,
-              );
-              await currentUserReference.update(usersUpdateData);
-              await actions.setActiveTripID(
-                context,
-                '0',
-              );
-              setState(() => FFAppState().tripLog = []);
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MainWidget(),
-                ),
-              );
-            },
-            text: 'Terminar Viaje',
-            options: FFButtonOptions(
-              width: double.infinity,
-              height: 80,
-              color: FlutterFlowTheme.of(context).customColor3,
-              textStyle: FlutterFlowTheme.of(context).subtitle2.override(
-                    fontFamily: 'Poppins',
-                    color: Colors.white,
+                final usersUpdateData = createUsersRecordData(
+                  onTrip: false,
+                );
+                await currentUserReference.update(usersUpdateData);
+                await actions.setActiveTripID(
+                  context,
+                  '0',
+                );
+                setState(() => FFAppState().tripLog = []);
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MainWidget(),
                   ),
-              borderSide: BorderSide(
-                color: Colors.transparent,
-                width: 1,
+                );
+              },
+              text: 'Terminar Viaje',
+              options: FFButtonOptions(
+                width: double.infinity,
+                height: 60,
+                color: FlutterFlowTheme.of(context).customColor3,
+                textStyle: FlutterFlowTheme.of(context).subtitle2.override(
+                      fontFamily: 'Poppins',
+                      color: Colors.white,
+                    ),
+                borderSide: BorderSide(
+                  color: Colors.transparent,
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.circular(12),
               ),
-              borderRadius: BorderRadius.circular(12),
             ),
           ),
         ],

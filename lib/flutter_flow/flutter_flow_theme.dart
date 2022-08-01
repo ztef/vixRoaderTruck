@@ -3,31 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
-
-const kThemeModeKey = '__theme_mode__';
-SharedPreferences _prefs;
-
 abstract class FlutterFlowTheme {
-  static Future initialize() async =>
-      _prefs = await SharedPreferences.getInstance();
-  static ThemeMode get themeMode {
-    final darkMode = _prefs?.getBool(kThemeModeKey);
-    return darkMode == null
-        ? ThemeMode.system
-        : darkMode
-            ? ThemeMode.dark
-            : ThemeMode.light;
+  static FlutterFlowTheme of(BuildContext context) {
+    return LightModeTheme();
   }
-
-  static void saveThemeMode(ThemeMode mode) => mode == ThemeMode.system
-      ? _prefs?.remove(kThemeModeKey)
-      : _prefs?.setBool(kThemeModeKey, mode == ThemeMode.dark);
-
-  static FlutterFlowTheme of(BuildContext context) =>
-      Theme.of(context).brightness == Brightness.dark
-          ? DarkModeTheme()
-          : LightModeTheme();
 
   Color primaryColor;
   Color secondaryColor;
@@ -170,33 +149,6 @@ class ThemeTypography extends Typography {
         fontWeight: FontWeight.w600,
         fontSize: 14,
       );
-}
-
-class DarkModeTheme extends FlutterFlowTheme {
-  Color primaryColor = const Color(0xFF4B39EF);
-  Color secondaryColor = const Color(0xFF39D2C0);
-  Color tertiaryColor = const Color(0xFFEE8B60);
-  Color alternate = const Color(0xFFFF5963);
-  Color primaryBackground = const Color(0xFF1A1F24);
-  Color secondaryBackground = const Color(0xFF101213);
-  Color primaryText = const Color(0xFFFFFFFF);
-  Color secondaryText = const Color(0xFF95A1AC);
-
-  Color primaryBtnText = Color(0xFFFFFFFF);
-  Color lineColor = Color(0xFF22282F);
-  Color customColor1 = Color(0xFF452FB7);
-  Color grayIcon = Color(0xFF95A1AC);
-  Color gray200 = Color(0xFFDBE2E7);
-  Color gray600 = Color(0xFF262D34);
-  Color black600 = Color(0xFF090F13);
-  Color tertiary400 = Color(0xFF39D2C0);
-  Color textColor = Color(0xFF1E2429);
-  Color btnText = Color(0xFFFFFFFF);
-  Color customColor3 = Color(0xFFDF3F3F);
-  Color customColor4 = Color(0xFF090F13);
-  Color white = Color(0xFFFFFFFF);
-  Color background = Color(0xFF1D2429);
-  Color backgroundComponents = Color(0xFF1D2428);
 }
 
 extension TextStyleHelper on TextStyle {

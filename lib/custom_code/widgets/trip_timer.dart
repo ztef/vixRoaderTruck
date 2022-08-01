@@ -52,9 +52,9 @@ class _TripTimerState extends State<TripTimer> {
         ),
         child: Container(
           width: double.infinity,
-          height: 32,
+          height: 50,
           decoration: BoxDecoration(
-            color: FlutterFlowTheme.of(context).primaryColor,
+            color: Color(0xFFD2D2D2),
             boxShadow: [
               BoxShadow(
                 color: Colors.white,
@@ -78,10 +78,10 @@ class _TripTimerState extends State<TripTimer> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
-                        width: 110,
-                        height: 20,
+                        width: 100,
+                        height: 50,
                         decoration: BoxDecoration(
-                          color: Colors.green,
+                          color: const Color(0xFFFF0000),
                           borderRadius: BorderRadius.circular(8),
                           shape: BoxShape.rectangle,
                         ),
@@ -95,7 +95,7 @@ class _TripTimerState extends State<TripTimer> {
                                   EdgeInsetsDirectional.fromSTEB(5, 5, 0, 0),
                               child: thisTrip._subscribe((v) {
                                 return Text(
-                                  '${v.driveTime}',
+                                  '${v.pauseTime}',
                                   style: FlutterFlowTheme.of(context)
                                       .bodyText1
                                       .override(
@@ -120,10 +120,10 @@ class _TripTimerState extends State<TripTimer> {
                         ),
                       ),
                       Container(
-                        width: 110,
-                        height: 20,
+                        width: 100,
+                        height: 50,
                         decoration: BoxDecoration(
-                          color: Color(0xFFFF0000),
+                          color: Colors.green,
                           borderRadius: BorderRadius.circular(8),
                           shape: BoxShape.rectangle,
                         ),
@@ -136,7 +136,7 @@ class _TripTimerState extends State<TripTimer> {
                                   EdgeInsetsDirectional.fromSTEB(5, 5, 0, 0),
                               child: thisTrip._subscribe((v) {
                                 return Text(
-                                  '${v.pauseTime}',
+                                  '${v.driveTime}',
                                   style: FlutterFlowTheme.of(context)
                                       .bodyText1
                                       .override(
