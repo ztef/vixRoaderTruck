@@ -176,8 +176,8 @@ class _ShareWithSettingsWidgetState extends State<ShareWithSettingsWidget> {
                                           .subtitle1,
                                     ),
                                   ),
-                                  if ((currentUserReference !=
-                                      currentUserDocument?.shareTripsWith))
+                                  if (currentUserReference !=
+                                      currentUserDocument?.shareTripsWith)
                                     Align(
                                       alignment: AlignmentDirectional(-1, 0),
                                       child: Text(
@@ -187,8 +187,8 @@ class _ShareWithSettingsWidgetState extends State<ShareWithSettingsWidget> {
                                             .bodyText1,
                                       ),
                                     ),
-                                  if ((currentUserReference !=
-                                      currentUserDocument?.shareTripsWith))
+                                  if (currentUserReference !=
+                                      currentUserDocument?.shareTripsWith)
                                     Align(
                                       alignment: AlignmentDirectional(-1, 0),
                                       child: Padding(

@@ -314,9 +314,9 @@ class _TripDetailWidgetState extends State<TripDetailWidget>
                                               .secondaryBackground,
                                         ),
                                         child: Visibility(
-                                          visible: (tripDetailTripsRecord
-                                                  .reference ==
-                                              currentUserDocument?.trip),
+                                          visible:
+                                              tripDetailTripsRecord.reference ==
+                                                  currentUserDocument?.trip,
                                           child: Container(
                                             width: 100,
                                             height: 32,
@@ -679,7 +679,7 @@ class _TripDetailWidgetState extends State<TripDetailWidget>
                             ],
                           ),
                         ),
-                        if ((tripDetailTripsRecord.status == 'new'))
+                        if (tripDetailTripsRecord.status == 'new')
                           Padding(
                             padding:
                                 EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),
@@ -730,7 +730,7 @@ class _TripDetailWidgetState extends State<TripDetailWidget>
                             ).animated(
                                 [animationsMap['buttonOnPageLoadAnimation']]),
                           ),
-                        if ((tripDetailTripsRecord.active == true))
+                        if (tripDetailTripsRecord.active == true)
                           FFButtonWidget(
                             onPressed: () async {
                               await actions.setActiveTripID(

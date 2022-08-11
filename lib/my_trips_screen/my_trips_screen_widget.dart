@@ -240,8 +240,8 @@ class _MyTripsScreenWidgetState extends State<MyTripsScreenWidget> {
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
-                                        if ((listViewTripsRecord.reference ==
-                                            currentUserDocument?.trip))
+                                        if (listViewTripsRecord.reference ==
+                                            currentUserDocument?.trip)
                                           Text(
                                             'En Curso',
                                             style: FlutterFlowTheme.of(context)

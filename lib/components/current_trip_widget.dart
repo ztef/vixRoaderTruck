@@ -8,7 +8,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 
 class CurrentTripWidget extends StatefulWidget {
   const CurrentTripWidget({
@@ -33,22 +32,6 @@ class _CurrentTripWidgetState extends State<CurrentTripWidget>
       initialState: AnimationState(
         offset: Offset(0, 50),
         scale: 1,
-        opacity: 0,
-      ),
-      finalState: AnimationState(
-        offset: Offset(0, 0),
-        scale: 1,
-        opacity: 1,
-      ),
-    ),
-    'progressBarOnPageLoadAnimation': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      duration: 600,
-      hideBeforeAnimating: false,
-      fadeIn: true,
-      initialState: AnimationState(
-        offset: Offset(0, 0),
-        scale: 0.4,
         opacity: 0,
       ),
       finalState: AnimationState(
@@ -91,7 +74,7 @@ class _CurrentTripWidgetState extends State<CurrentTripWidget>
           final dashboardProgressCardTripsRecord = snapshot.data;
           return Container(
             width: double.infinity,
-            height: 170,
+            height: 220,
             decoration: BoxDecoration(
               color: FlutterFlowTheme.of(context).secondaryBackground,
               boxShadow: [
@@ -106,6 +89,66 @@ class _CurrentTripWidgetState extends State<CurrentTripWidget>
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(15, 0, 0, 0),
+                      child: Text(
+                        dateTimeFormat(
+                            'd/M/y', dashboardProgressCardTripsRecord.date),
+                        style: FlutterFlowTheme.of(context).bodyText2.override(
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w500,
+                            ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(5, 0, 0, 0),
+                      child: Text(
+                        dateTimeFormat(
+                            'jm', dashboardProgressCardTripsRecord.date),
+                        style: FlutterFlowTheme.of(context).bodyText1.override(
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w500,
+                            ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(5, 0, 0, 0),
+                      child: FaIcon(
+                        FontAwesomeIcons.history,
+                        color: Colors.black,
+                        size: 24,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(5, 0, 0, 0),
+                      child: Container(
+                        width: 80,
+                        height: 24,
+                        child: custom_widgets.ElapsedTime(
+                          width: 80,
+                          height: 24,
+                          fecha: dashboardProgressCardTripsRecord.date,
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: AlignmentDirectional(1, 0),
+                      child: Container(
+                        width: 80,
+                        height: 35,
+                        child: custom_widgets.GetPos(
+                          width: 80,
+                          height: 35,
+                          trip: dashboardProgressCardTripsRecord,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(15, 10, 15, 0),
                   child: Row(
@@ -119,122 +162,72 @@ class _CurrentTripWidgetState extends State<CurrentTripWidget>
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    dateTimeFormat('d/M/y',
-                                        dashboardProgressCardTripsRecord.date),
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyText2
-                                        .override(
-                                          fontFamily: 'Poppins',
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        5, 0, 0, 0),
-                                    child: Text(
-                                      dateTimeFormat(
-                                          'jm',
-                                          dashboardProgressCardTripsRecord
-                                              .date),
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyText1
-                                          .override(
-                                            fontFamily: 'Poppins',
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        5, 0, 0, 0),
-                                    child: FaIcon(
-                                      FontAwesomeIcons.history,
-                                      color: Colors.black,
-                                      size: 24,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        5, 0, 0, 0),
-                                    child: Container(
-                                      width: 80,
-                                      height: 24,
-                                      child: custom_widgets.ElapsedTime(
-                                        width: 80,
-                                        height: 24,
-                                        fecha: dashboardProgressCardTripsRecord
-                                            .date,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
                               Text(
                                 dashboardProgressCardTripsRecord.destination,
                                 style: FlutterFlowTheme.of(context).title3,
                               ),
                               Container(
                                 width: 200,
-                                height: 33,
+                                height: 23,
                                 child: custom_widgets.GetVerboseStatus(
                                   width: 200,
-                                  height: 33,
-                                  status: valueOrDefault<String>(
-                                    dashboardProgressCardTripsRecord.lastStatus,
-                                    'Sin Estatus',
-                                  ),
+                                  height: 23,
+                                  status: dashboardProgressCardTripsRecord
+                                      .lastStatus,
                                 ),
                               ),
                             ],
                           ),
                         ),
                       ),
-                      CircularPercentIndicator(
-                        percent: 0.45,
-                        radius: 35,
-                        lineWidth: 8,
-                        animation: true,
-                        progressColor:
-                            FlutterFlowTheme.of(context).primaryColor,
-                        backgroundColor:
-                            FlutterFlowTheme.of(context).primaryBackground,
-                        center: Text(
-                          '45%',
-                          style: FlutterFlowTheme.of(context)
-                              .bodyText1
-                              .override(
-                                fontFamily: 'Poppins',
-                                color: FlutterFlowTheme.of(context).primaryText,
-                              ),
+                      Container(
+                        width: 70,
+                        height: 70,
+                        child: custom_widgets.SpeedMeter(
+                          width: 70,
+                          height: 70,
                         ),
-                      ).animated(
-                          [animationsMap['progressBarOnPageLoadAnimation']]),
+                      ),
                     ],
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
+                  padding: EdgeInsetsDirectional.fromSTEB(0, 2, 0, 0),
                   child: Container(
                     width: 300,
-                    height: 40,
+                    height: 50,
                     child: custom_widgets.TripTimer(
                       width: 300,
-                      height: 40,
+                      height: 50,
                       log: functions
                           .jsonListParser(dashboardProgressCardTripsRecord.log)
                           .toList(),
+                      onRoute: dashboardProgressCardTripsRecord.onRoute,
                     ),
                   ),
                 ),
-                Column(
+                Row(
                   mainAxisSize: MainAxisSize.max,
-                  children: [],
+                  children: [
+                    Expanded(
+                      child: Align(
+                        alignment: AlignmentDirectional(0, 0),
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 2, 0, 0),
+                          child: Container(
+                            width: 300,
+                            height: 25,
+                            child: custom_widgets.ShowTraveledDistance(
+                              width: 300,
+                              height: 25,
+                              totalDistance:
+                                  dashboardProgressCardTripsRecord.distance,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

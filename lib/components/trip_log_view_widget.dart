@@ -85,7 +85,7 @@ class _TripLogViewWidgetState extends State<TripLogViewWidget> {
                             color: Color(0xFFFCFCFC),
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   dateTimeFormat(
@@ -94,6 +94,7 @@ class _TripLogViewWidgetState extends State<TripLogViewWidget> {
                                         listaItem,
                                         r'''$.time''',
                                       ).toString())),
+                                  textAlign: TextAlign.start,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyText1
                                       .override(

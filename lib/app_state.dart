@@ -44,6 +44,10 @@ class FFAppState {
     }
 
     _elasticity = prefs.getInt('ff_elasticity') ?? _elasticity;
+    _routeSpeed = prefs.getInt('ff_routeSpeed') ?? _routeSpeed;
+    _routeTime = prefs.getInt('ff_routeTime') ?? _routeTime;
+    _pauseSpeed = prefs.getInt('ff_pauseSpeed') ?? _pauseSpeed;
+    _pauseTime = prefs.getInt('ff_pauseTime') ?? _pauseTime;
   }
 
   SharedPreferences prefs;
@@ -99,7 +103,7 @@ class FFAppState {
 
   String currentGeoData = '';
 
-  int _elasticity = 0;
+  int _elasticity = 100;
   int get elasticity => _elasticity;
   set elasticity(int _value) {
     _elasticity = _value;
@@ -113,6 +117,34 @@ class FFAppState {
   String route = '';
 
   double distance = 0.0;
+
+  int _routeSpeed = 10;
+  int get routeSpeed => _routeSpeed;
+  set routeSpeed(int _value) {
+    _routeSpeed = _value;
+    prefs.setInt('ff_routeSpeed', _value);
+  }
+
+  int _routeTime = 1;
+  int get routeTime => _routeTime;
+  set routeTime(int _value) {
+    _routeTime = _value;
+    prefs.setInt('ff_routeTime', _value);
+  }
+
+  int _pauseSpeed = 3;
+  int get pauseSpeed => _pauseSpeed;
+  set pauseSpeed(int _value) {
+    _pauseSpeed = _value;
+    prefs.setInt('ff_pauseSpeed', _value);
+  }
+
+  int _pauseTime = 10;
+  int get pauseTime => _pauseTime;
+  set pauseTime(int _value) {
+    _pauseTime = _value;
+    prefs.setInt('ff_pauseTime', _value);
+  }
 }
 
 LatLng _latLngFromString(String val) {

@@ -13,7 +13,6 @@ import '../my_trips_screen/my_trips_screen_widget.dart';
 import '../profile_screen/profile_screen_widget.dart';
 import '../share_with_settings/share_with_settings_widget.dart';
 import '../sstart_screen/sstart_screen_widget.dart';
-import '../custom_code/widgets/index.dart' as custom_widgets;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -343,17 +342,6 @@ class _MainWidgetState extends State<MainWidget> {
                             },
                           ),
                         ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 10),
-                      child: Container(
-                        width: double.infinity,
-                        height: 50,
-                        child: custom_widgets.GetPos(
-                          width: double.infinity,
-                          height: 50,
-                        ),
                       ),
                     ),
                     if (mainUsersRecord.onTrip ?? true)

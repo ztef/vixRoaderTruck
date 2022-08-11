@@ -8,8 +8,11 @@ import '../../flutter_flow/custom_functions.dart'; // Imports custom functions
 import 'package:flutter/material.dart';
 // Begin custom widget code
 import 'package:location/location.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flutter_beep/flutter_beep.dart';
+import 'package:native_dialog/native_dialog.dart';
+import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
+import 'package:flutter/services.dart';
+
 import 'dart:convert';
 
 class AuxClasses extends StatefulWidget {
@@ -33,17 +36,27 @@ class _AuxClassesState extends State<AuxClasses> {
   }
 }
 
-class PositionInformer {
-  static void inform(_appState, _locationData) {
-    if (_appState.tripStatus['activeTripID'] != "0") {
-      _appState.activeTrip.update({
-        'position': GeoPoint(_locationData.latitude, _locationData.longitude),
-        //'lat': _locationData.latitude,
-        //'long': _locationData.longitude,
-        'speed': _locationData.speed,
-        'positionTime': DateTime.now(),
-      });
-    }
+class TripInformer {
+  static void inform(_tripRef, _locationData, List<gmaps.LatLng> _traveledR,
+      double _traveledD) {
+    _tripRef.update({
+      'position': GeoPoint(_locationData.latitude, _locationData.longitude),
+      'speed': _locationData.speed,
+      'positionTime': DateTime.now(),
+      'traveledRoute': _encodePolyline(_traveledR),
+      'traveledDistance': _traveledD,
+    });
+  }
+
+  static String _encodePolyline(List<gmaps.LatLng> _traveledR) {
+    List<List<num>> outRoute = [];
+
+    _traveledR.forEach((gmaps.LatLng point) {
+      outRoute.add([point.latitude, point.longitude]);
+    });
+
+    String s = encodePolyline(outRoute);
+    return s;
   }
 }
 
@@ -53,6 +66,7 @@ class DeviceLocation {
   static Location getLocation() {
     if (location == null) {
       location = Location();
+      //location.changeSettings(accuracy: LocationAccuracy.high, interval: 1000, distanceFilter: 5.0);
       location.enableBackgroundMode(enable: true);
     }
     return location;
@@ -60,152 +74,131 @@ class DeviceLocation {
 }
 
 class SpeedMonitor {
-  //pt = pausedTrip
-  static DateTime dtref;
-  static Duration elapsed;
-  static bool dtFlag = false;
-  static DateTime dtnow;
-  static bool firePause = false;
+  static int samples = 0;
+  static int maxSamples = 15;
+  static int maxSamplesTrip = 60;
+  static int maxSamplesPause = 15;
+  static dynamic lastStatus;
 
-  static Widget printSpeed(rt, pt, context, v, p) {
-    if (pt) {
-      dtFlag = false;
-      if (v > 20) {
-        // Pone en RUTA automatica
-        _setAutoRoute();
-        _showSpeedDialog(context);
+  static bool _isPaused = false;
+  static bool _isRouted = true;
+
+  static bool _sustainedSpeed = false;
+  static bool _sustainedPause = false;
+  static bool _enoughSamples = false;
+
+  static int routeSpeed = 0;
+  static int pauseSpeed = 0;
+
+  static var _trip;
+
+  static setTripDoc(tr) {
+    _trip = tr;
+  }
+
+  static watchSpeed(tripStatus, speed, Function callBack) {
+    routeSpeed = FFAppState().routeSpeed;
+    maxSamplesTrip = FFAppState().routeTime * 60;
+    pauseSpeed = FFAppState().pauseSpeed;
+    maxSamplesPause = FFAppState().pauseTime * 60;
+
+    callBack(samples);
+
+    if (tripStatus == _isPaused) {
+      //Si
+      maxSamples = maxSamplesPause;
+      // Checa si se ha mantenido velocidad sostenida
+      if (speed > pauseSpeed) {
+        //si
+        _sustainedSpeed = true; //si
+        samples = samples + 1;
+      } else {
+        _sustainedSpeed = false;
+        samples = 0;
       }
     }
-    if (rt) {
-      if (v < 3) {
-        if (!dtFlag) {
-          dtref = DateTime.now();
-          dtFlag = true;
-          firePause = false;
-        } else {
-          dtnow = DateTime.now();
-          elapsed = dtnow.difference(dtref);
-          if (elapsed.inMinutes > 5) {
-            firePause = true;
-            _setAutoPause();
-            _showPauseDialog(context);
-            firePause = false;
-            dtFlag = false;
-          }
-        }
+    if (tripStatus == _isRouted) {
+      //
+      maxSamples = maxSamplesTrip;
+      // Checa si se ha parado la velocidad
+      if (speed < routeSpeed) {
+        _sustainedPause = true;
+        samples = samples + 1;
+      } else {
+        _sustainedPause = false; //
+        samples = 0;
       }
     }
 
-    return Row(children: [
-      //Text(firePause.toString()),
-      ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          height: 10,
-          width: 300,
-          child: LinearProgressIndicator(
-            value: p, //Porcentaje
-            valueColor: const AlwaysStoppedAnimation<Color>(Colors.orange),
-            backgroundColor: const Color(0xFFFFDAB8),
-          ),
-        ),
-      ),
-      Text(v.toString()),
-      const Text('km/h'),
-    ]);
+    if (samples > maxSamples) {
+      _enoughSamples = true;
+    } else {
+      _enoughSamples = false; //
+    }
+
+    if ((_sustainedSpeed == true) &&
+        (tripStatus == _isPaused) &&
+        (_enoughSamples == true)) {
+      samples = 0;
+      _setAutoRoute();
+      _alert('R');
+    }
+
+    if ((_sustainedPause == true) &&
+        (tripStatus == _isRouted) &&
+        (_enoughSamples == true)) {
+      _setAutoPause();
+      _alert('P');
+      samples = 0;
+    }
+  }
+
+  static void _alert(tipo) async {
+    try {
+      String s = (tipo == 'P')
+          ? "No se detecta movimiento, se activará una PAUSA automática. Por favor registra el motivo."
+          : "Se detectó movimiento, el dispositivo se pondrá en RUTA automáticamente.";
+      await NativeDialog.alert(s);
+    } on PlatformException {
+      // Ignore error
+    }
   }
 
   static _setAutoRoute() {
-    String tripID = FFAppState().tripStatus['activeTripID'];
+    var d = _trip.log;
+    List<dynamic> log = [];
+    log = jsonListParser(d);
 
-    FFAppState().tripStatus = {
-      'activeTripID': tripID,
+    var tripStatus = {
+      'time': DateTime.now().toString(),
       'status': 'route',
       'reason': '',
-      'desc': 'Mov detectado'
+      'desc': 'Mov Detectado'
     };
 
-    FFAppState().onRoute = true;
-    Future<DocumentSnapshot> ff = FFAppState().activeTrip.get();
-    ff.then((DocumentSnapshot value) {
-      var d = value.get('log');
-
-      List<dynamic> log = [];
-      log = jsonListParser(d);
-
-      log.insert(0, {
-        'time': DateTime.now().toString(),
-        'status': 'route',
-        'reason': '',
-        'desc': 'Mov detectado'
-      });
-
-      FFAppState().activeTrip.update({
-        'onRoute': true,
-        'log': jsonEncode(log),
-        'lastStatus': jsonEncode(FFAppState().tripStatus)
-      });
-
-      FFAppState().onRoute = true;
+    log.insert(0, tripStatus);
+    _trip.reference.update({
+      'onRoute': true,
+      'log': jsonEncode(log),
+      'lastStatus': jsonEncode(tripStatus),
     });
   }
 
   static _setAutoPause() {
-    String tripID = FFAppState().tripStatus['activeTripID'];
-
-    FFAppState().tripStatus = {
-      'activeTripID': tripID,
+    var d = _trip.log;
+    List<dynamic> log = [];
+    log = jsonListParser(d);
+    var tripStatus = {
+      'time': DateTime.now().toString(),
       'status': 'paused',
       'reason': 'auto',
-      'desc': 'Pausa detectada'
+      'desc': 'Pausa Detectada'
     };
-
-    FFAppState().onRoute = false;
-    Future<DocumentSnapshot> ff = FFAppState().activeTrip.get();
-    ff.then((DocumentSnapshot value) {
-      var d = value.get('log');
-
-      List<dynamic> log = [];
-      log = jsonListParser(d);
-
-      log.insert(0, {
-        'time': DateTime.now().toString(),
-        'status': 'paused',
-        'reason': 'auto',
-        'desc': 'Pausa detectada'
-      });
-
-      FFAppState().activeTrip.update({
-        'onRoute': false,
-        'log': jsonEncode(log),
-        'lastStatus': jsonEncode(FFAppState().tripStatus)
-      });
-
-      FFAppState().onRoute = false;
+    log.insert(0, tripStatus);
+    _trip.reference.update({
+      'onRoute': false,
+      'log': jsonEncode(log),
+      'lastStatus': jsonEncode(tripStatus),
     });
-  }
-
-  static _showSpeedDialog(context) {
-    FlutterBeep.playSysSound(41);
-    Fluttertoast.showToast(
-        msg: "Moviminto detctado, en RUTA Automática",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 3,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
-  }
-
-  static _showPauseDialog(context) {
-    FlutterBeep.playSysSound(41);
-    Fluttertoast.showToast(
-        msg: "Moviminto no detctado, en PAUSA Automática",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 3,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
   }
 }

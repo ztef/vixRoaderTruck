@@ -285,8 +285,8 @@ class _SetOriginDestWidgetState extends State<SetOriginDestWidget> {
               ),
             ),
           ),
-          if ((destinationPlaceValue.name != null &&
-              destinationPlaceValue.name != ''))
+          if (destinationPlaceValue.name != null &&
+              destinationPlaceValue.name != '')
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(30, 30, 30, 30),
               child: FFButtonWidget(

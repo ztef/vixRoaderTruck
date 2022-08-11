@@ -122,8 +122,8 @@ class _NewTripDestinationWidgetState extends State<NewTripDestinationWidget> {
                     ),
                   ),
                 ),
-                if ((placePickerValue.name != null &&
-                    placePickerValue.name != ''))
+                if (placePickerValue.name != null &&
+                    placePickerValue.name != '')
                   Align(
                     alignment: AlignmentDirectional(0.02, -0.8),
                     child: Padding(
@@ -163,7 +163,7 @@ class _NewTripDestinationWidgetState extends State<NewTripDestinationWidget> {
               ],
             ),
           ),
-          if ((placePickerValue.name != null && placePickerValue.name != ''))
+          if (placePickerValue.name != null && placePickerValue.name != '')
             Align(
               alignment: AlignmentDirectional(-0.8, 0.84),
               child: Container(
@@ -211,8 +211,8 @@ class _NewTripDestinationWidgetState extends State<NewTripDestinationWidget> {
                         ],
                       ),
                     ),
-                    if ((placePickerValue.name != null &&
-                        placePickerValue.name != ''))
+                    if (placePickerValue.name != null &&
+                        placePickerValue.name != '')
                       Align(
                         alignment: AlignmentDirectional(0.53, -0.7),
                         child: Padding(

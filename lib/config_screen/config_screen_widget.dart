@@ -1,8 +1,10 @@
+import '../flutter_flow/flutter_flow_count_controller.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ConfigScreenWidget extends StatefulWidget {
@@ -13,15 +15,12 @@ class ConfigScreenWidget extends StatefulWidget {
 }
 
 class _ConfigScreenWidgetState extends State<ConfigScreenWidget> {
-  TextEditingController elasticityFieldController;
   final scaffoldKey = GlobalKey<ScaffoldState>();
-
-  @override
-  void initState() {
-    super.initState();
-    elasticityFieldController =
-        TextEditingController(text: FFAppState().elasticity.toString());
-  }
+  int countControllerValue;
+  int routeSpeedValue;
+  int routeTimeValue;
+  int pauseSpeedValue;
+  int pauseTimeValue;
 
   @override
   Widget build(BuildContext context) {
@@ -61,124 +60,341 @@ class _ConfigScreenWidgetState extends State<ConfigScreenWidget> {
         mainAxisSize: MainAxisSize.max,
         children: [
           Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Material(
-                  color: Colors.transparent,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+            padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+            child: Container(
+              width: double.infinity,
+              height: 80,
+              decoration: BoxDecoration(
+                color: FlutterFlowTheme.of(context).secondaryBackground,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text(
+                    'Reportar mi ubicación cada',
+                    style: FlutterFlowTheme.of(context).subtitle2,
                   ),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: FlutterFlowTheme.of(context).secondaryBackground,
-                        width: 0,
-                      ),
-                    ),
-                    child: Column(
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(4, 15, 4, 0),
+                    child: Row(
                       mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(16, 0, 4, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Reportar mi ubicación cada',
-                                style: FlutterFlowTheme.of(context).subtitle2,
-                              ),
-                            ],
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 10, 0),
+                          child: Text(
+                            'Metros',
+                            style: FlutterFlowTheme.of(context).bodyText1,
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Align(
-                                  alignment: AlignmentDirectional(0.3, 0),
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0, 0, 5, 0),
-                                    child: Container(
-                                      width: 50,
-                                      child: TextFormField(
-                                        controller: elasticityFieldController,
-                                        autofocus: true,
-                                        obscureText: false,
-                                        decoration: InputDecoration(
-                                          hintStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyText2,
-                                          enabledBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Color(0x00000000),
-                                              width: 1,
-                                            ),
-                                            borderRadius:
-                                                const BorderRadius.only(
-                                              topLeft: Radius.circular(4.0),
-                                              topRight: Radius.circular(4.0),
-                                            ),
-                                          ),
-                                          focusedBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Color(0x00000000),
-                                              width: 1,
-                                            ),
-                                            borderRadius:
-                                                const BorderRadius.only(
-                                              topLeft: Radius.circular(4.0),
-                                              topRight: Radius.circular(4.0),
-                                            ),
-                                          ),
-                                        ),
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyText1
-                                            .override(
-                                              fontFamily: 'Poppins',
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                        keyboardType: TextInputType.number,
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                        Container(
+                          width: 160,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(25),
+                            shape: BoxShape.rectangle,
+                            border: Border.all(
+                              color: Color(0xFF9E9E9E),
+                              width: 1,
+                            ),
+                          ),
+                          child: FlutterFlowCountController(
+                            decrementIconBuilder: (enabled) => FaIcon(
+                              FontAwesomeIcons.minus,
+                              color: enabled
+                                  ? Color(0xDD000000)
+                                  : Color(0xFFEEEEEE),
+                              size: 20,
+                            ),
+                            incrementIconBuilder: (enabled) => FaIcon(
+                              FontAwesomeIcons.plus,
+                              color: enabled ? Colors.blue : Color(0xFFEEEEEE),
+                              size: 20,
+                            ),
+                            countBuilder: (count) => Text(
+                              count.toString(),
+                              style: GoogleFonts.getFont(
+                                'Roboto',
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
                               ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    0, 0, 100, 0),
-                                child: Text(
-                                  'Metros',
-                                  style: FlutterFlowTheme.of(context).bodyText1,
-                                ),
-                              ),
-                            ],
+                            ),
+                            count: countControllerValue ??=
+                                FFAppState().elasticity,
+                            updateCount: (count) =>
+                                setState(() => countControllerValue = count),
+                            stepSize: 10,
+                            minimum: 0,
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+            child: Container(
+              width: double.infinity,
+              height: 115,
+              decoration: BoxDecoration(
+                color: FlutterFlowTheme.of(context).secondaryBackground,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text(
+                    'Poner en ruta al exceder',
+                    style: FlutterFlowTheme.of(context).subtitle2,
+                  ),
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(4, 15, 4, 0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          'Km/h   ',
+                          style: FlutterFlowTheme.of(context).bodyText1,
+                        ),
+                        Container(
+                          width: 160,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(25),
+                            shape: BoxShape.rectangle,
+                            border: Border.all(
+                              color: Color(0xFF9E9E9E),
+                              width: 1,
+                            ),
+                          ),
+                          child: FlutterFlowCountController(
+                            decrementIconBuilder: (enabled) => FaIcon(
+                              FontAwesomeIcons.minus,
+                              color: enabled
+                                  ? Color(0xDD000000)
+                                  : Color(0xFFEEEEEE),
+                              size: 20,
+                            ),
+                            incrementIconBuilder: (enabled) => FaIcon(
+                              FontAwesomeIcons.plus,
+                              color: enabled ? Colors.blue : Color(0xFFEEEEEE),
+                              size: 20,
+                            ),
+                            countBuilder: (count) => Text(
+                              count.toString(),
+                              style: GoogleFonts.getFont(
+                                'Roboto',
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                              ),
+                            ),
+                            count: routeSpeedValue ??= FFAppState().routeSpeed,
+                            updateCount: (count) =>
+                                setState(() => routeSpeedValue = count),
+                            stepSize: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          'x Min   ',
+                          style: FlutterFlowTheme.of(context).bodyText1,
+                        ),
+                        Container(
+                          width: 160,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(25),
+                            shape: BoxShape.rectangle,
+                            border: Border.all(
+                              color: Color(0xFF9E9E9E),
+                              width: 1,
+                            ),
+                          ),
+                          child: FlutterFlowCountController(
+                            decrementIconBuilder: (enabled) => FaIcon(
+                              FontAwesomeIcons.minus,
+                              color: enabled
+                                  ? Color(0xDD000000)
+                                  : Color(0xFFEEEEEE),
+                              size: 20,
+                            ),
+                            incrementIconBuilder: (enabled) => FaIcon(
+                              FontAwesomeIcons.plus,
+                              color: enabled ? Colors.blue : Color(0xFFEEEEEE),
+                              size: 20,
+                            ),
+                            countBuilder: (count) => Text(
+                              count.toString(),
+                              style: GoogleFonts.getFont(
+                                'Roboto',
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                              ),
+                            ),
+                            count: routeTimeValue ??= FFAppState().routeTime,
+                            updateCount: (count) =>
+                                setState(() => routeTimeValue = count),
+                            stepSize: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+            child: Container(
+              width: double.infinity,
+              height: 115,
+              decoration: BoxDecoration(
+                color: FlutterFlowTheme.of(context).secondaryBackground,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text(
+                    'Poner en pausa al bajar de',
+                    style: FlutterFlowTheme.of(context).subtitle2,
+                  ),
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(4, 15, 4, 0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          'Km/h',
+                          style: FlutterFlowTheme.of(context).bodyText1,
+                        ),
+                        Container(
+                          width: 160,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(25),
+                            shape: BoxShape.rectangle,
+                            border: Border.all(
+                              color: Color(0xFF9E9E9E),
+                              width: 1,
+                            ),
+                          ),
+                          child: FlutterFlowCountController(
+                            decrementIconBuilder: (enabled) => FaIcon(
+                              FontAwesomeIcons.minus,
+                              color: enabled
+                                  ? Color(0xDD000000)
+                                  : Color(0xFFEEEEEE),
+                              size: 20,
+                            ),
+                            incrementIconBuilder: (enabled) => FaIcon(
+                              FontAwesomeIcons.plus,
+                              color: enabled ? Colors.blue : Color(0xFFEEEEEE),
+                              size: 20,
+                            ),
+                            countBuilder: (count) => Text(
+                              count.toString(),
+                              style: GoogleFonts.getFont(
+                                'Roboto',
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                              ),
+                            ),
+                            count: pauseSpeedValue ??= FFAppState().pauseSpeed,
+                            updateCount: (count) =>
+                                setState(() => pauseSpeedValue = count),
+                            stepSize: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          'x Min',
+                          style: FlutterFlowTheme.of(context).bodyText1,
+                        ),
+                        Container(
+                          width: 160,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(25),
+                            shape: BoxShape.rectangle,
+                            border: Border.all(
+                              color: Color(0xFF9E9E9E),
+                              width: 1,
+                            ),
+                          ),
+                          child: FlutterFlowCountController(
+                            decrementIconBuilder: (enabled) => FaIcon(
+                              FontAwesomeIcons.minus,
+                              color: enabled
+                                  ? Color(0xDD000000)
+                                  : Color(0xFFEEEEEE),
+                              size: 20,
+                            ),
+                            incrementIconBuilder: (enabled) => FaIcon(
+                              FontAwesomeIcons.plus,
+                              color: enabled ? Colors.blue : Color(0xFFEEEEEE),
+                              size: 20,
+                            ),
+                            countBuilder: (count) => Text(
+                              count.toString(),
+                              style: GoogleFonts.getFont(
+                                'Roboto',
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                              ),
+                            ),
+                            count: pauseTimeValue ??= FFAppState().pauseTime,
+                            updateCount: (count) =>
+                                setState(() => pauseTimeValue = count),
+                            stepSize: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           Padding(
             padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 40),
             child: FFButtonWidget(
               onPressed: () async {
-                setState(() => FFAppState().elasticity =
-                    int.parse(elasticityFieldController.text));
+                setState(() => FFAppState().elasticity = countControllerValue);
+                setState(() => FFAppState().routeSpeed = routeSpeedValue);
+                setState(() => FFAppState().routeTime = routeTimeValue);
+                setState(() => FFAppState().pauseSpeed = pauseSpeedValue);
+                setState(() => FFAppState().pauseTime = pauseTimeValue);
                 Navigator.pop(context);
               },
               text: '\n',

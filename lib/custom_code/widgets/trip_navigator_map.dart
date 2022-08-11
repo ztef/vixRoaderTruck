@@ -9,8 +9,11 @@ import 'package:flutter/material.dart';
 // Begin custom widget code
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
 import 'aux_classes.dart';
+import 'map_bloc.dart';
+import 'trip_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'dart:math';
@@ -48,19 +51,32 @@ class TripNavigatorMap extends StatefulWidget {
 
 class _TripNavigatorMapState extends State<TripNavigatorMap> {
   Completer<gmaps.GoogleMapController> _controller = Completer();
+  gmaps.GoogleMapController googleMapController;
 
   Map<gmaps.MarkerId, gmaps.Marker> markers = <gmaps.MarkerId, gmaps.Marker>{};
-  PolylinePoints polylinePoints = PolylinePoints();
+  //PolylinePoints polylinePoints = PolylinePoints();
   Map<gmaps.PolylineId, gmaps.Polyline> polylines = {};
   List<gmaps.LatLng> polylineCoordinates = [];
+  List<gmaps.LatLng> polylineCoordinatesTraveled = [];
+
   double totalDistance = 0.0;
   String distancia = "0";
-  gmaps.LatLngBounds bounds;
+
+  double _zoom = 14;
+  double _tilt = 45;
+  double _bearing = 0.0;
+  bool _useBearing = false;
+  String debugStr = 'debug';
+
+  gmaps.LatLngBounds _bounds;
 
   gmaps.LatLng _origin;
-  LocationData currentLocation;
-  var speed = 0;
+  gmaps.LatLng currentLocation;
+
+  double _speed = 0;
   double p = 0.0;
+
+  bool _isMapLoaded = false;
 
   @override
   void initState() {
@@ -68,42 +84,66 @@ class _TripNavigatorMapState extends State<TripNavigatorMap> {
     _defineOrigin();
     _getRoute();
     _setMarkers();
-    getCurrentLocation();
   }
 
-  void getCurrentLocation() async {
-    Location location = DeviceLocation.getLocation();
+  _updatePosition(_lat, _long, _devspeed, _heading) {
+    if (_controller.isCompleted) {
+      currentLocation = gmaps.LatLng(_lat, _long);
+      _bearing = _heading;
+      _speed = _devspeed;
 
-    location.getLocation().then(
-      (location) {
-        setState(() {
-          currentLocation = location;
-        });
-      },
-    );
+      _updateMarker(gmaps.MarkerId('current_pos'), currentLocation);
 
-    gmaps.GoogleMapController googleMapController = await _controller.future;
+      _updateRoute();
 
-    location.onLocationChanged.listen(
-      (newLoc) async {
-        currentLocation = newLoc;
-        p = currentLocation.speed / 100;
-        _updateMarker(gmaps.MarkerId('current_pos'), newLoc);
+      setState(() {});
+      _cameraSet();
+    }
+  }
 
-        var actual_zoom = await googleMapController.getZoomLevel();
-        googleMapController.animateCamera(
-          gmaps.CameraUpdate.newCameraPosition(
-            gmaps.CameraPosition(
-                target: loc2LatLng(currentLocation),
-                zoom: actual_zoom,
-                tilt: 45,
-                bearing: currentLocation.heading),
-          ),
-        );
+  _updateRoute() {
+    polylineCoordinatesTraveled = RouteManager.getTraveledRoute();
+    debugStr = RouteManager.getDebugStr();
+    _setPolyLineTraveled();
+  }
 
-        setState(() {});
-      },
-    );
+  _cameraSet() {
+    if ((_speed > 5.0) && (_zoom > 14)) {
+      _useBearing = true;
+    } else {
+      _useBearing = false;
+    }
+
+    if (_zoom < 10) {
+      _bearing = 0.0;
+    }
+
+    googleMapController.animateCamera(gmaps.CameraUpdate.newCameraPosition(
+      gmaps.CameraPosition(
+          target: loc2LatLng(currentLocation),
+          zoom: _zoom,
+          tilt: _tilt,
+          bearing: _useBearing ? _bearing : 0.0),
+    ));
+  }
+
+  _zoomLevel(double zoom) {
+    if (_controller.isCompleted) {
+      if (zoom == 0.0) {
+        gmaps.CameraUpdate u = gmaps.CameraUpdate.newLatLngBounds(_bounds, 50);
+        googleMapController.animateCamera(u);
+      } else {
+        _zoom = zoom;
+        _cameraSet();
+      }
+    }
+  }
+
+  _tiltLevel(tilt) async {
+    if (_controller.isCompleted) {
+      _tilt = tilt;
+      _cameraSet();
+    }
   }
 
   loc2LatLng(loc) {
@@ -117,6 +157,7 @@ class _TripNavigatorMapState extends State<TripNavigatorMap> {
     } else {
       _origin = gmaps.LatLng(widget.origin.latitude, widget.origin.longitude);
     }
+    currentLocation = _origin;
   }
 
   void _setMarkers() {
@@ -126,18 +167,7 @@ class _TripNavigatorMapState extends State<TripNavigatorMap> {
     _setDestinationMarker();
 
     // Calcula los bounds para que se vean todos los markers
-    bounds = _boundsFromMarkers(markers);
-  }
-
-  void _updateMap(gmaps.GoogleMapController _controller) {
-    // Crea un CamaraUpdate
-    gmaps.CameraUpdate u = gmaps.CameraUpdate.newLatLngBounds(bounds, 50);
-
-    // Animate the camera to update
-    //gmaps.GoogleMapController googleMapController = await _controller.future;
-    _controller.animateCamera(u);
-
-    setState(() {});
+    _bounds = _boundsFromMarkers(markers);
   }
 
   gmaps.LatLngBounds _boundsFromMarkers(
@@ -203,33 +233,20 @@ class _TripNavigatorMapState extends State<TripNavigatorMap> {
 
     gmaps.Marker _marker = gmaps.Marker(
       markerId: marker.markerId,
-      //onTap: () {
-      //  print("tapped");
-      //},
       position: loc2LatLng(loc),
-      //icon: marker.icon,
       infoWindow: gmaps.InfoWindow(title: 'Tu ubicación en Tiempo Real'),
     );
-
-    //setState(() {
     markers[id] = _marker;
-    //});
   }
 
   _getRoute() {
-    List<PointLatLng> result = polylinePoints.decodePolyline(widget.route);
-
-    if (result.isNotEmpty) {
-      result.forEach((PointLatLng point) {
-        polylineCoordinates.add(gmaps.LatLng(point.latitude, point.longitude));
-      });
-      _setPolyLine();
-    }
+    polylineCoordinates = RouteManager.getRoute();
+    _setPolyLine();
   }
 
   _setPolyLine() {
     polylines = {};
-    gmaps.PolylineId id = gmaps.PolylineId("poly");
+    gmaps.PolylineId id = gmaps.PolylineId("full");
     gmaps.Polyline polyline = gmaps.Polyline(
         polylineId: id,
         color: Colors.red,
@@ -239,44 +256,49 @@ class _TripNavigatorMapState extends State<TripNavigatorMap> {
     polylines[id] = polyline;
   }
 
+  _setPolyLineTraveled() {
+    gmaps.PolylineId id = gmaps.PolylineId("traveled");
+    gmaps.Polyline polyline = gmaps.Polyline(
+        polylineId: id,
+        color: Colors.green,
+        points: polylineCoordinatesTraveled,
+        width: 5);
+
+    polylines[id] = polyline;
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (currentLocation == null) {
-      return Center(
-        child: SizedBox(
-          width: 50,
-          height: 50,
-          child: CircularProgressIndicator(
-            color: FlutterFlowTheme.of(context).primaryColor,
-          ),
-        ),
-      );
-    }
     return Column(
-      mainAxisSize: MainAxisSize.max,
+      //mainAxisSize: MainAxisSize.max,
       children: [
         Text(
-          "Pos: [Lat:${currentLocation.latitude} Long:${currentLocation.longitude}] Vel:${currentLocation.speed}",
-          style: TextStyle(
-            fontFamily: 'Lexend Deca',
-            color: Colors.black,
-            fontSize: 11,
-            fontWeight: FontWeight.normal,
-          ),
+            'Lat: ${currentLocation.latitude}, Long: ${currentLocation.longitude}'),
+        //Text('Steps: ${polylineCoordinates.length}'),
+        //Text('Traveled: ${polylineCoordinatesTraveled.length}'),
+        //Text('Debug : ${debugStr}'),
+        BlocListener(
+          bloc: MapBlocContainer.getZoomCubit(),
+          listener: (context, state) {
+            _zoomLevel(state);
+          },
+          child: Container(),
         ),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: Container(
-            height: 10,
-            width: 300,
-            child: LinearProgressIndicator(
-              value: p, // percent filled
-              valueColor: const AlwaysStoppedAnimation<Color>(Colors.orange),
-              backgroundColor: const Color(0xFFFFDAB8),
-            ),
-          ),
+        BlocListener(
+          bloc: MapBlocContainer.getTiltCubit(),
+          listener: (context, state) {
+            _tiltLevel(state);
+          },
+          child: Container(),
         ),
-        Text('Total a recorrer : ${widget.distance.round()} Km'),
+        BlocListener(
+          bloc: TripBlocContainer.getPositionCubit(),
+          listener: (context, GPSPoint state) {
+            _updatePosition(
+                state.latitude, state.longitude, state.speed, state.heading);
+          },
+          child: Container(),
+        ),
         Container(
           width: double.infinity,
           height: MediaQuery.of(context).size.height * 0.5,
@@ -290,9 +312,9 @@ class _TripNavigatorMapState extends State<TripNavigatorMap> {
                 child: gmaps.GoogleMap(
                   initialCameraPosition: gmaps.CameraPosition(
                       target: loc2LatLng(widget.location),
-                      zoom: 11.0,
-                      tilt: 45,
-                      bearing: 0),
+                      zoom: _zoom,
+                      tilt: _tilt,
+                      bearing: _bearing),
                   markers: markers.values.toSet(),
                   polylines: Set<gmaps.Polyline>.of(polylines.values),
                   gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
@@ -301,12 +323,12 @@ class _TripNavigatorMapState extends State<TripNavigatorMap> {
                     ),
                   ].toSet(),
                   myLocationEnabled: true,
+                  onCameraIdle: () async {
+                    _zoom = await googleMapController.getZoomLevel();
+                  },
                   onMapCreated: (mapController) {
                     _controller.complete(mapController);
-                    //_defineOrigin();
-                    //_setMarkers();
-                    //_updateMap(mapController);
-                    //_getRoute();
+                    googleMapController = mapController;
                   },
                 ),
               ),

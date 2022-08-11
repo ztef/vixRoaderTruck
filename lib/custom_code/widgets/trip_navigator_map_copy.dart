@@ -9,9 +9,11 @@ import 'package:flutter/material.dart';
 // Begin custom widget code
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
 import 'aux_classes.dart';
+import 'map_bloc.dart';
+import 'trip_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'dart:math';
@@ -19,44 +21,62 @@ import 'dart:async';
 
 //import 'dart:math' as math;
 
-class PreViewTripMap extends StatefulWidget {
-  const PreViewTripMap({
+class TripNavigatorMapCopy extends StatefulWidget {
+  const TripNavigatorMapCopy({
     Key key,
     this.width,
     this.height,
     this.origin,
     this.destination,
-    this.origenActual,
+    this.positionZero,
+    this.usePositionZero,
+    this.route,
+    this.distance,
+    this.location,
   }) : super(key: key);
 
   final double width;
   final double height;
-  final FFPlace origin;
-  final FFPlace destination;
-  final bool origenActual;
+  final LatLng origin;
+  final LatLng destination;
+  final LatLng positionZero;
+  final bool usePositionZero;
+  final String route;
+  final double distance;
+  final LatLng location;
 
   @override
-  _PreViewTripMapState createState() => _PreViewTripMapState();
+  _TripNavigatorMapCopyState createState() => _TripNavigatorMapCopyState();
 }
 
-class _PreViewTripMapState extends State<PreViewTripMap> {
+class _TripNavigatorMapCopyState extends State<TripNavigatorMapCopy> {
   Completer<gmaps.GoogleMapController> _controller = Completer();
+  gmaps.GoogleMapController googleMapController;
 
   Map<gmaps.MarkerId, gmaps.Marker> markers = <gmaps.MarkerId, gmaps.Marker>{};
   PolylinePoints polylinePoints = PolylinePoints();
   Map<gmaps.PolylineId, gmaps.Polyline> polylines = {};
   List<gmaps.LatLng> polylineCoordinates = [];
-  double totalDistance = 0.0;
-  String distancia = "Calculando distancia ...";
-  gmaps.LatLngBounds bounds;
 
+  double totalDistance = 0.0;
+  String distancia = "0";
+  double _tilt = 45;
+  bool _bearing = true;
+
+  gmaps.LatLngBounds bounds;
   gmaps.LatLng _origin;
   LocationData currentLocation;
+  var speed = 0;
+  double p = 0.0;
+
+  bool _isMapLoaded = false;
 
   @override
   void initState() {
     super.initState();
-    getCurrentLocation();
+    _defineOrigin();
+    _getRoute();
+    _setMarkers();
   }
 
   void getCurrentLocation() async {
@@ -70,7 +90,80 @@ class _PreViewTripMapState extends State<PreViewTripMap> {
       },
     );
 
-    gmaps.GoogleMapController googleMapController = await _controller.future;
+    googleMapController = await _controller.future;
+
+    location.onLocationChanged.listen(
+      (newLoc) async {
+        currentLocation = newLoc;
+        p = currentLocation.speed / 100;
+        _updateMarker(gmaps.MarkerId('current_pos'), newLoc);
+
+        var actual_zoom = await googleMapController.getZoomLevel();
+
+        if (actual_zoom < 10) {
+          _bearing = false;
+        } else {
+          _bearing = true;
+        }
+        googleMapController.animateCamera(
+          gmaps.CameraUpdate.newCameraPosition(
+            gmaps.CameraPosition(
+                target: loc2LatLng(currentLocation),
+                zoom: actual_zoom,
+                tilt: _tilt,
+                bearing: _bearing ? currentLocation.heading : 0),
+          ),
+        );
+
+        setState(() {});
+      },
+    );
+  }
+
+  _updatePosition(p) {
+    if (_controller.isCompleted) {
+      _updateMarker(gmaps.MarkerId('current_pos'), p);
+      setState(() {});
+      googleMapController
+          .animateCamera(gmaps.CameraUpdate.newLatLng(loc2LatLng(p)));
+    }
+  }
+
+  _zoomLevel(double _zoom) {
+    if (_controller.isCompleted) {
+      if (_zoom == 0.0) {
+        gmaps.CameraUpdate u = gmaps.CameraUpdate.newLatLngBounds(bounds, 50);
+        googleMapController.animateCamera(u);
+      } else {
+        googleMapController.animateCamera(
+          gmaps.CameraUpdate.newCameraPosition(
+            gmaps.CameraPosition(
+                target: loc2LatLng(currentLocation),
+                zoom: _zoom,
+                tilt: _tilt,
+                bearing: _bearing ? currentLocation.heading : 0),
+          ),
+        );
+      }
+    }
+  }
+
+  _tiltLevel(tilt) async {
+    setState(() {
+      _tilt = tilt;
+    });
+    if (_controller.isCompleted) {
+      var actual_zoom = await googleMapController.getZoomLevel();
+      googleMapController.animateCamera(
+        gmaps.CameraUpdate.newCameraPosition(
+          gmaps.CameraPosition(
+              target: loc2LatLng(currentLocation),
+              zoom: actual_zoom,
+              tilt: _tilt,
+              bearing: _bearing ? currentLocation.heading : 0),
+        ),
+      );
+    }
   }
 
   loc2LatLng(loc) {
@@ -78,21 +171,12 @@ class _PreViewTripMapState extends State<PreViewTripMap> {
   }
 
   void _defineOrigin() {
-    // Establece en _origin el origen correcto
-
-    setState(() {
-      distancia = "00";
-
-      if (widget.origenActual == true) {
-        distancia = "origen";
-        _origin =
-            gmaps.LatLng(currentLocation.latitude, currentLocation.longitude);
-      } else {
-        distancia = "seleccionada";
-        _origin = gmaps.LatLng(
-            widget.origin.latLng.latitude, widget.origin.latLng.longitude);
-      }
-    });
+    if (widget.usePositionZero == true) {
+      _origin = gmaps.LatLng(
+          widget.positionZero.latitude, widget.positionZero.longitude);
+    } else {
+      _origin = gmaps.LatLng(widget.origin.latitude, widget.origin.longitude);
+    }
   }
 
   void _setMarkers() {
@@ -103,17 +187,6 @@ class _PreViewTripMapState extends State<PreViewTripMap> {
 
     // Calcula los bounds para que se vean todos los markers
     bounds = _boundsFromMarkers(markers);
-  }
-
-  void _updateMap(gmaps.GoogleMapController _controller) {
-    // Crea un CamaraUpdate
-    gmaps.CameraUpdate u = gmaps.CameraUpdate.newLatLngBounds(bounds, 50);
-
-    // Animate the camera to update
-    //gmaps.GoogleMapController googleMapController = await _controller.future;
-    _controller.animateCamera(u);
-
-    setState(() {});
   }
 
   gmaps.LatLngBounds _boundsFromMarkers(
@@ -143,7 +216,7 @@ class _PreViewTripMapState extends State<PreViewTripMap> {
   _setCurrentPosMarker() {
     final marker = gmaps.Marker(
       markerId: gmaps.MarkerId('current_pos'),
-      position: loc2LatLng(currentLocation),
+      position: loc2LatLng(widget.location),
       infoWindow: gmaps.InfoWindow(
         title: 'Tu Posición Actual',
       ),
@@ -154,7 +227,7 @@ class _PreViewTripMapState extends State<PreViewTripMap> {
   _setDestinationMarker() {
     final marker = gmaps.Marker(
       markerId: gmaps.MarkerId('dest_pos'),
-      position: loc2LatLng(widget.destination.latLng),
+      position: loc2LatLng(widget.destination),
       infoWindow: gmaps.InfoWindow(
         title: 'Destino',
       ),
@@ -192,58 +265,15 @@ class _PreViewTripMapState extends State<PreViewTripMap> {
     //});
   }
 
-  _getRoute() async {
-    distancia = "Calculando distancia ...";
+  _getRoute() {
+    List<PointLatLng> result = polylinePoints.decodePolyline(widget.route);
 
-    List<List<num>> outRoute = [];
-
-    var result = await polylinePoints?.getRouteBetweenCoordinates(
-      "AIzaSyBQNLamEhl38teT0vijHoKKTyu88-d6Ais",
-      PointLatLng(_origin.latitude, _origin.longitude),
-      PointLatLng(widget.destination.latLng.latitude,
-          widget.destination.latLng.longitude),
-      travelMode: TravelMode.driving,
-    );
-
-    distancia = result.errorMessage;
-
-    if (result.points.isNotEmpty) {
-      result.points.forEach((PointLatLng point) {
+    if (result.isNotEmpty) {
+      result.forEach((PointLatLng point) {
         polylineCoordinates.add(gmaps.LatLng(point.latitude, point.longitude));
-        outRoute.add([point.latitude, point.longitude]);
       });
-      _calcDistance();
       _setPolyLine();
-      _keepRoute(outRoute);
     }
-  }
-
-  _keepRoute(List<List<num>> p) {
-    String s = encodePolyline(p);
-    FFAppState().route = s;
-  }
-
-  _calcDistance() {
-    for (int i = 0; i < polylineCoordinates.length - 1; i++) {
-      totalDistance += _coordinateDistance(
-        polylineCoordinates[i].latitude,
-        polylineCoordinates[i].longitude,
-        polylineCoordinates[i + 1].latitude,
-        polylineCoordinates[i + 1].longitude,
-      );
-    }
-
-    distancia = "Distancia a destino (km): " + totalDistance.round().toString();
-    FFAppState().distance = totalDistance;
-  }
-
-  double _coordinateDistance(lat1, lon1, lat2, lon2) {
-    var p = 0.017453292519943295;
-    var c = cos;
-    var a = 0.5 -
-        c((lat2 - lat1) * p) / 2 +
-        c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
-    return 12742 * asin(sqrt(a));
   }
 
   _setPolyLine() {
@@ -255,14 +285,12 @@ class _PreViewTripMapState extends State<PreViewTripMap> {
         points: polylineCoordinates,
         width: 3);
 
-    setState(() {
-      polylines[id] = polyline;
-    });
+    polylines[id] = polyline;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (currentLocation == null) {
+    /*if (currentLocation == null) {
       return Center(
         child: SizedBox(
           width: 50,
@@ -273,11 +301,53 @@ class _PreViewTripMapState extends State<PreViewTripMap> {
         ),
       );
     }
+    */
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
-        Text(distancia),
-        Container(),
+        Text(
+          "Pos: [Lat:${currentLocation.latitude} Long:${currentLocation.longitude}] Vel:${currentLocation.speed}",
+          style: TextStyle(
+            fontFamily: 'Lexend Deca',
+            color: Colors.black,
+            fontSize: 11,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Container(
+            height: 10,
+            width: 300,
+            child: LinearProgressIndicator(
+              value: p, // percent filled
+              valueColor: const AlwaysStoppedAnimation<Color>(Colors.orange),
+              backgroundColor: const Color(0xFFFFDAB8),
+            ),
+          ),
+        ),
+        Text('Total a recorrer : ${widget.distance.round()} Km'),
+        BlocListener(
+          bloc: MapBlocContainer.getZoomCubit(),
+          listener: (context, state) {
+            _zoomLevel(state);
+          },
+          child: Container(),
+        ),
+        BlocListener(
+          bloc: MapBlocContainer.getTiltCubit(),
+          listener: (context, state) {
+            _tiltLevel(state);
+          },
+          child: Container(),
+        ),
+        BlocListener(
+          bloc: TripBlocContainer.getPositionCubit(),
+          listener: (context, state) {
+            _updatePosition(state);
+          },
+          child: Container(),
+        ),
         Container(
           width: double.infinity,
           height: MediaQuery.of(context).size.height * 0.5,
@@ -290,7 +360,7 @@ class _PreViewTripMapState extends State<PreViewTripMap> {
               Expanded(
                 child: gmaps.GoogleMap(
                   initialCameraPosition: gmaps.CameraPosition(
-                      target: loc2LatLng(currentLocation),
+                      target: loc2LatLng(widget.location),
                       zoom: 11.0,
                       tilt: 45,
                       bearing: 0),
@@ -304,10 +374,7 @@ class _PreViewTripMapState extends State<PreViewTripMap> {
                   myLocationEnabled: true,
                   onMapCreated: (mapController) {
                     _controller.complete(mapController);
-                    _defineOrigin();
-                    _setMarkers();
-                    _updateMap(mapController);
-                    _getRoute();
+                    googleMapController = mapController;
                   },
                 ),
               ),

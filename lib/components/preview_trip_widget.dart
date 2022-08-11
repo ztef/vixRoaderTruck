@@ -51,33 +51,24 @@ class _PreviewTripWidgetState extends State<PreviewTripWidget> {
                   style: FlutterFlowTheme.of(context).title2,
                 ),
               ),
-              Expanded(
-                child: Align(
-                  alignment: AlignmentDirectional(0.95, 0),
-                  child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(15, 8, 0, 0),
-                    child: Text(
-                      'Revisa los datos de tu viaje',
-                      style: FlutterFlowTheme.of(context).bodyText2,
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
-          Container(
-            width: double.infinity,
-            height: 400,
-            child: custom_widgets.PreViewTripMap(
+          Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
+            child: Container(
               width: double.infinity,
               height: 400,
-              origin: widget.origin,
-              destination: widget.destination,
-              origenActual: widget.origenActual,
+              child: custom_widgets.PreViewTripMap(
+                width: double.infinity,
+                height: 400,
+                origin: widget.origin,
+                destination: widget.destination,
+                origenActual: widget.origenActual,
+              ),
             ),
           ),
           Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(0, 5, 0, 10),
+            padding: EdgeInsetsDirectional.fromSTEB(0, 15, 0, 10),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
