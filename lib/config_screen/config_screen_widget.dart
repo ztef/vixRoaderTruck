@@ -148,7 +148,7 @@ class _ConfigScreenWidgetState extends State<ConfigScreenWidget> {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Text(
-                    'Poner en ruta al exceder',
+                    'Poner en pausa al bajar  de',
                     style: FlutterFlowTheme.of(context).subtitle2,
                   ),
                   Padding(
@@ -273,7 +273,7 @@ class _ConfigScreenWidgetState extends State<ConfigScreenWidget> {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Text(
-                    'Poner en pausa al bajar de',
+                    'Poner en ruta al pasar de ',
                     style: FlutterFlowTheme.of(context).subtitle2,
                   ),
                   Padding(
