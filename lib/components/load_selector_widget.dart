@@ -147,28 +147,35 @@ class _LoadSelectorWidgetState extends State<LoadSelectorWidget> {
                 ],
               ),
             ),
-            FFButtonWidget(
-              onPressed: () async {
-                final tripsUpdateData = createTripsRecordData(
-                  load: textController.text,
-                );
-                await FFAppState().selectedTrip.update(tripsUpdateData);
-                Navigator.pop(context);
-              },
-              text: 'Continuar',
-              options: FFButtonOptions(
-                width: 130,
-                height: 40,
-                color: FlutterFlowTheme.of(context).primaryColor,
-                textStyle: FlutterFlowTheme.of(context).subtitle2.override(
-                      fontFamily: 'Poppins',
-                      color: Colors.white,
-                    ),
-                borderSide: BorderSide(
-                  color: Colors.transparent,
-                  width: 1,
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0, 30, 0, 0),
+              child: FFButtonWidget(
+                onPressed: () async {
+                  final tripsUpdateData = createTripsRecordData(
+                    load: textController.text,
+                  );
+                  await FFAppState().selectedTrip.update(tripsUpdateData);
+                  Navigator.pop(context);
+                },
+                text: '',
+                icon: Icon(
+                  Icons.done,
+                  size: 15,
                 ),
-                borderRadius: BorderRadius.circular(12),
+                options: FFButtonOptions(
+                  width: 60,
+                  height: 60,
+                  color: FlutterFlowTheme.of(context).primaryColor,
+                  textStyle: FlutterFlowTheme.of(context).subtitle2.override(
+                        fontFamily: 'Poppins',
+                        color: Colors.white,
+                      ),
+                  borderSide: BorderSide(
+                    color: Colors.transparent,
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(30),
+                ),
               ),
             ),
           ],

@@ -197,9 +197,9 @@ class _ProfileScreenWidgetState extends State<ProfileScreenWidget> {
                   controller: yourNameController,
                   obscureText: false,
                   decoration: InputDecoration(
-                    labelText: 'Full Name',
+                    labelText: 'Nombre Completo',
                     labelStyle: FlutterFlowTheme.of(context).bodyText2,
-                    hintText: 'Your full name...',
+                    hintText: 'Su nombre completo...',
                     hintStyle: FlutterFlowTheme.of(context).bodyText2,
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(

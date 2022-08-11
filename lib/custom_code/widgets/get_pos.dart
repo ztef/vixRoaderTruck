@@ -7,20 +7,26 @@ import '../actions/index.dart'; // Imports custom actions
 import '../../flutter_flow/custom_functions.dart'; // Imports custom functions
 import 'package:flutter/material.dart';
 // Begin custom widget code
+//import 'package:flutter_platform_alert/flutter_platform_alert.dart';
+
 import 'package:location/location.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:convert';
 import 'aux_classes.dart';
+import 'trip_bloc.dart';
+import 'dart:async';
 
 class GetPos extends StatefulWidget {
   const GetPos({
     Key key,
     this.width,
     this.height,
+    this.trip,
   }) : super(key: key);
 
   final double width;
   final double height;
+  final TripsRecord trip;
 
   @override
   _GetPosState createState() => _GetPosState();
@@ -31,14 +37,29 @@ class _GetPosState extends State<GetPos> {
   LocationData currentLocation;
   LocationData _refLocation;
 
-  int elasticity = FFAppState().elasticity;
   var d = 0.0;
-  var speed = 0.0;
+  double speed = 0.0;
+  bool workingFlash = false;
+  String alert = "";
+  Timer timer;
+  IconData supervision_icon = Icons.pan_tool;
+  bool supervision_timer = false;
 
   @override
   void initState() {
     super.initState();
+
+    RouteManager.setRoute(widget.trip.route);
     getCurrentLocation();
+    SpeedMonitor.setTripDoc(widget.trip);
+    timer = Timer.periodic(
+        const Duration(seconds: 1), (timer) => _speedSupervision());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer.cancel();
   }
 
   _getDistance(a, b) {
@@ -47,56 +68,99 @@ class _GetPosState extends State<GetPos> {
   }
 
   void getCurrentLocation() async {
-    Location location = DeviceLocation.getLocation();
+    //Location location = DeviceLocation.getLocation();
 
     location.getLocation().then(
-      (location) {
+      (_ldata) {
         setState(() {
-          currentLocation = location;
-          _refLocation = location;
-          PositionInformer.inform(FFAppState(), currentLocation);
+          currentLocation = _ldata;
+          _refLocation = _ldata;
+
+          TripBlocContainer.getPositionCubit().setValue(
+              _ldata.latitude, _ldata.longitude, _ldata.heading, 0.0, 0.0);
+
+          RouteManager.setLocation(_ldata.latitude, _ldata.longitude);
+
+          TripInformer.inform(widget.trip.reference, _ldata,
+              RouteManager.getTraveledRoute(), RouteManager.getDistance());
         });
       },
     );
 
-    location.onLocationChanged.listen((LocationData _currentLocation) {
+    location.onLocationChanged.listen((LocationData _ldata) {
       setState(() {
-        currentLocation = _currentLocation;
+        workingFlash = !workingFlash;
+
+        currentLocation = _ldata;
         d = _getDistance(currentLocation, _refLocation);
-        if (d > elasticity) {
-          _refLocation = currentLocation;
-          PositionInformer.inform(FFAppState(), currentLocation);
+
+        speed = _ldata.speed * 3600 / 1000;
+        TripBlocContainer.getPositionCubit().setValue(
+            _ldata.latitude, _ldata.longitude, _ldata.heading, speed, 0.0);
+
+        TripBlocContainer.getSpeedCubit().setValue(speed);
+
+        RouteManager.setLocation(_ldata.latitude, _ldata.longitude);
+
+        if (d > FFAppState().elasticity) {
+          _refLocation = _ldata;
+
+          TripBlocContainer.getTraveledDistanceCubit().setSpeed(speed);
+
+          TripInformer.inform(widget.trip.reference, _ldata,
+              RouteManager.getTraveledRoute(), RouteManager.getDistance());
         }
       });
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    if (currentLocation == null) {
-      return const Text('Esperando ...');
-    }
-
-    return _widget();
+  _speedSupervision() {
+    SpeedMonitor.watchSpeed(widget.trip.onRoute, speed, _force);
   }
 
-  _widget() {
-    var v = (currentLocation.speed * 3600 / 1000).toInt();
-    var p = v / 100;
-    var onPausedTrip = FFAppState().onTrip && !FFAppState().onRoute;
-    var onRouteTrip = FFAppState().onTrip && FFAppState().onRoute;
+  _force(int t) {
+    setState(() {
+      if ((widget.trip.onRoute == true) && (t == 0)) {
+        supervision_icon = Icons.speed;
+        supervision_timer = false;
+      }
+      if ((widget.trip.onRoute == true) && (t != 0)) {
+        supervision_icon = Icons.pan_tool;
+        supervision_timer = true;
+      }
+      if ((widget.trip.onRoute == false) && (t == 0)) {
+        supervision_icon = Icons.pan_tool;
+        supervision_timer = false;
+      }
+      if ((widget.trip.onRoute == false) && (t != 0)) {
+        supervision_icon = Icons.speed;
+        supervision_timer = true;
+      }
+    });
+  }
 
-    return Container(
-      child: Column(children: [
-        Row(children: [
-          Text('Lat :'),
-          Text(currentLocation.latitude.toString()),
-          Text('Long :'),
-          Text(currentLocation.longitude.toString()),
-          Icon(Icons.location_on, color: Colors.green, size: 30),
-        ]),
-        SpeedMonitor.printSpeed(onRouteTrip, onPausedTrip, context, v, p),
-      ]),
-    );
+  @override
+  Widget build(BuildContext context) {
+    if (workingFlash) {
+      return Row(
+        children: [
+          Icon(Icons.location_on, color: Colors.green, size: 20),
+          Icon(supervision_icon, color: Colors.green, size: 15),
+          supervision_timer
+              ? Icon(Icons.timer, color: Colors.greenAccent, size: 15)
+              : Container(),
+        ],
+      );
+    } else {
+      return Row(
+        children: [
+          Icon(Icons.location_on_outlined, color: Colors.green, size: 20),
+          Icon(supervision_icon, color: Colors.green, size: 15),
+          supervision_timer
+              ? Icon(Icons.timer_sharp, color: Colors.green, size: 15)
+              : Container(),
+        ],
+      );
+    }
   }
 }

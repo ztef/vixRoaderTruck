@@ -68,6 +68,21 @@ abstract class TripsRecord implements Built<TripsRecord, TripsRecordBuilder> {
   bool get onRoute;
 
   @nullable
+  LatLng get positionOrig;
+
+  @nullable
+  LatLng get postitionZero;
+
+  @nullable
+  bool get usePositionZero;
+
+  @nullable
+  String get route;
+
+  @nullable
+  double get distance;
+
+  @nullable
   @BuiltValueField(wireName: kDocumentReferenceField)
   DocumentReference get reference;
 
@@ -85,7 +100,10 @@ abstract class TripsRecord implements Built<TripsRecord, TripsRecordBuilder> {
     ..lat = 0.0
     ..long = 0.0
     ..status = ''
-    ..onRoute = false;
+    ..onRoute = false
+    ..usePositionZero = false
+    ..route = ''
+    ..distance = 0.0;
 
   static CollectionReference get collection =>
       FirebaseFirestore.instance.collection('trips');
@@ -128,6 +146,11 @@ Map<String, dynamic> createTripsRecordData({
   String status,
   LatLng positionDest,
   bool onRoute,
+  LatLng positionOrig,
+  LatLng postitionZero,
+  bool usePositionZero,
+  String route,
+  double distance,
 }) =>
     serializers.toFirestore(
         TripsRecord.serializer,
@@ -150,4 +173,9 @@ Map<String, dynamic> createTripsRecordData({
           ..long = long
           ..status = status
           ..positionDest = positionDest
-          ..onRoute = onRoute));
+          ..onRoute = onRoute
+          ..positionOrig = positionOrig
+          ..postitionZero = postitionZero
+          ..usePositionZero = usePositionZero
+          ..route = route
+          ..distance = distance));

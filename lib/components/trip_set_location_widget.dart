@@ -23,8 +23,8 @@ class TripSetLocationWidget extends StatefulWidget {
 }
 
 class _TripSetLocationWidgetState extends State<TripSetLocationWidget> {
-  TripsRecord newlyCreatedTrip;
   LatLng currentUserLocationValue;
+  TripsRecord newlyCreatedTrip;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class _TripSetLocationWidgetState extends State<TripSetLocationWidget> {
       width: double.infinity,
       height: 280,
       decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).secondaryBackground,
+        color: Colors.white,
         boxShadow: [
           BoxShadow(
             blurRadius: 5,
@@ -48,87 +48,96 @@ class _TripSetLocationWidgetState extends State<TripSetLocationWidget> {
         ),
       ),
       child: Padding(
-        padding: EdgeInsetsDirectional.fromSTEB(20, 20, 20, 20),
+        padding: EdgeInsetsDirectional.fromSTEB(15, 15, 15, 5),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
             Text(
               widget.location.city,
-              style: FlutterFlowTheme.of(context).subtitle1,
+              style: FlutterFlowTheme.of(context).subtitle1.override(
+                    fontFamily: 'Poppins',
+                    fontSize: 19,
+                  ),
             ),
             Text(
               widget.location.address,
-              style: FlutterFlowTheme.of(context).bodyText1,
+              style: FlutterFlowTheme.of(context).bodyText1.override(
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w500,
+                  ),
             ),
-            FFButtonWidget(
-              onPressed: () async {
-                currentUserLocationValue = await getCurrentUserLocation(
-                    defaultLocation: LatLng(0.0, 0.0));
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+              child: FFButtonWidget(
+                onPressed: () async {
+                  currentUserLocationValue = await getCurrentUserLocation(
+                      defaultLocation: LatLng(0.0, 0.0));
 
-                final tripsCreateData = createTripsRecordData(
-                  tripId: random_data.randomString(
-                    1,
-                    10,
-                    true,
-                    false,
-                    false,
-                  ),
-                  destination: widget.location.name,
-                  date: functions.ahora(),
-                  uid: currentUserUid,
-                  customer: '',
-                  load: '',
-                  unit: '',
-                  shareWith: currentUserDocument?.shareTripsWith,
-                  active: false,
-                  status: 'new',
-                  position: currentUserLocationValue,
-                  positionDest: widget.location.latLng,
-                  onRoute: false,
-                );
-                var tripsRecordReference = TripsRecord.collection.doc();
-                await tripsRecordReference.set(tripsCreateData);
-                newlyCreatedTrip = TripsRecord.getDocumentFromData(
-                    tripsCreateData, tripsRecordReference);
-                setState(
-                    () => FFAppState().activeTrip = newlyCreatedTrip.reference);
-                setState(() =>
-                    FFAppState().selectedTrip = newlyCreatedTrip.reference);
-                setState(() => FFAppState().tripLog = []);
-
-                final usersUpdateData = createUsersRecordData(
-                  onTrip: true,
-                );
-                await currentUserReference.update(usersUpdateData);
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => TripDetailWidget(),
-                  ),
-                );
-
-                setState(() {});
-              },
-              text: 'Seleccionar',
-              options: FFButtonOptions(
-                width: double.infinity,
-                height: 60,
-                color: FlutterFlowTheme.of(context).primaryColor,
-                textStyle: FlutterFlowTheme.of(context).subtitle2.override(
-                      fontFamily: 'Lexend Deca',
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.normal,
+                  final tripsCreateData = createTripsRecordData(
+                    tripId: random_data.randomString(
+                      1,
+                      10,
+                      true,
+                      false,
+                      false,
                     ),
-                borderSide: BorderSide(
-                  color: Colors.transparent,
-                  width: 1,
+                    destination: widget.location.name,
+                    date: functions.ahora(),
+                    uid: currentUserUid,
+                    customer: '',
+                    load: '',
+                    unit: '',
+                    shareWith: currentUserDocument?.shareTripsWith,
+                    active: false,
+                    status: 'new',
+                    position: currentUserLocationValue,
+                    positionDest: widget.location.latLng,
+                    onRoute: false,
+                  );
+                  var tripsRecordReference = TripsRecord.collection.doc();
+                  await tripsRecordReference.set(tripsCreateData);
+                  newlyCreatedTrip = TripsRecord.getDocumentFromData(
+                      tripsCreateData, tripsRecordReference);
+                  setState(() =>
+                      FFAppState().activeTrip = newlyCreatedTrip.reference);
+                  setState(() =>
+                      FFAppState().selectedTrip = newlyCreatedTrip.reference);
+                  setState(() => FFAppState().tripLog = []);
+
+                  final usersUpdateData = createUsersRecordData(
+                    onTrip: true,
+                  );
+                  await currentUserReference.update(usersUpdateData);
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TripDetailWidget(),
+                    ),
+                  );
+
+                  setState(() {});
+                },
+                text: 'Seleccionar',
+                options: FFButtonOptions(
+                  width: double.infinity,
+                  height: 40,
+                  color: Color(0xFF252EDC),
+                  textStyle: FlutterFlowTheme.of(context).subtitle2.override(
+                        fontFamily: 'Lexend Deca',
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                  borderSide: BorderSide(
+                    color: Colors.transparent,
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                borderRadius: BorderRadius.circular(40),
               ),
             ),
             Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
+              padding: EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
               child: FFButtonWidget(
                 onPressed: () async {
                   Navigator.pop(context);
@@ -136,14 +145,17 @@ class _TripSetLocationWidgetState extends State<TripSetLocationWidget> {
                 text: 'Cancelar',
                 options: FFButtonOptions(
                   width: double.infinity,
-                  height: 60,
-                  color: FlutterFlowTheme.of(context).primaryBackground,
-                  textStyle: FlutterFlowTheme.of(context).subtitle2,
+                  height: 40,
+                  color: Color(0xFF252EDC),
+                  textStyle: FlutterFlowTheme.of(context).subtitle2.override(
+                        fontFamily: 'Poppins',
+                        color: Colors.white,
+                      ),
                   borderSide: BorderSide(
                     color: Colors.transparent,
                     width: 1,
                   ),
-                  borderRadius: BorderRadius.circular(40),
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
             ),

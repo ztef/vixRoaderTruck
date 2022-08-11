@@ -11,3 +11,5 @@ export 'share_with_settings/share_with_settings_widget.dart'
     show ShareWithSettingsWidget;
 export 'test/test_widget.dart' show TestWidget;
 export 'main_map/main_map_widget.dart' show MainMapWidget;
+export 'config_screen/config_screen_widget.dart' show ConfigScreenWidget;
+export 'set_origin_dest/set_origin_dest_widget.dart' show SetOriginDestWidget;

@@ -15,11 +15,13 @@ class TripTimer extends StatefulWidget {
     this.width,
     this.height,
     this.log,
+    this.onRoute,
   }) : super(key: key);
 
   final double width;
   final double height;
   final List<dynamic> log;
+  final bool onRoute;
 
   @override
   _TripTimerState createState() => _TripTimerState();
@@ -35,15 +37,23 @@ class _TripTimerState extends State<TripTimer> {
         Trip(widget.log); // Crea un Objeto TRIP a aprtir del LOG de eventos
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    thisTrip.stop();
+    thisTrip = null;
+  }
+
   /*
  thisTrip._subscribe((v) {return Text('${v.elapsedTime}');})
  */
 
   @override
   Widget build(BuildContext context) {
-    return // Generated code for this ContainerTime Widget...
-        Padding(
-      padding: EdgeInsetsDirectional.fromSTEB(3, 3, 9, 3),
+    thisTrip.setStatus(widget.onRoute);
+
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(0, 5, 9, 5),
       child: Material(
         color: Colors.transparent,
         elevation: 2,
@@ -51,10 +61,10 @@ class _TripTimerState extends State<TripTimer> {
           borderRadius: BorderRadius.circular(8),
         ),
         child: Container(
-          width: double.infinity,
-          height: 32,
+          width: 300,
+          height: 30,
           decoration: BoxDecoration(
-            color: FlutterFlowTheme.of(context).primaryColor,
+            color: Color(0xFFD2D2D2),
             boxShadow: [
               BoxShadow(
                 color: Colors.white,
@@ -65,95 +75,66 @@ class _TripTimerState extends State<TripTimer> {
               color: Colors.white,
             ),
           ),
-          child: SingleChildScrollView(
-            child: Column(
+          child: Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(10, 5, 10, 5),
+            child: Row(
               mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(10, 5, 10, 5),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 110,
-                        height: 20,
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(8),
-                          shape: BoxShape.rectangle,
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(5, 5, 0, 0),
-                              child: thisTrip._subscribe((v) {
-                                return Text(
-                                  '${v.driveTime}',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyText1
-                                      .override(
-                                        fontFamily: 'Poppins',
-                                        color:
-                                            FlutterFlowTheme.of(context).white,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                );
-                              }),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
-                        child: Icon(
-                          Icons.timer,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                      ),
-                      Container(
-                        width: 110,
-                        height: 20,
-                        decoration: BoxDecoration(
-                          color: Color(0xFFFF0000),
-                          borderRadius: BorderRadius.circular(8),
-                          shape: BoxShape.rectangle,
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(5, 5, 0, 0),
-                              child: thisTrip._subscribe((v) {
-                                return Text(
-                                  '${v.pauseTime}',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyText1
-                                      .override(
-                                        fontFamily: 'Poppins',
-                                        color:
-                                            FlutterFlowTheme.of(context).white,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                );
-                              }),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                Container(
+                  width: 90,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(8),
+                    shape: BoxShape.rectangle,
                   ),
+                  child: Align(
+                      alignment: AlignmentDirectional(0, 0),
+                      child: thisTrip._subscribe((v) {
+                        return Text(
+                          '${v.pauseTime}',
+                          style:
+                              FlutterFlowTheme.of(context).bodyText1.override(
+                                    fontFamily: 'Poppins',
+                                    color: FlutterFlowTheme.of(context).white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                        );
+                      })),
+                ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
+                  child: Icon(
+                    Icons.timer,
+                    color: widget.onRoute ? Colors.green : Colors.red,
+                    size: 20,
+                  ),
+                ),
+                Container(
+                  width: 90,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(8),
+                    shape: BoxShape.rectangle,
+                  ),
+                  child: Align(
+                      alignment: AlignmentDirectional(0, 0),
+                      child: thisTrip._subscribe((v) {
+                        return Text(
+                          '${v.driveTime}',
+                          style:
+                              FlutterFlowTheme.of(context).bodyText1.override(
+                                    fontFamily: 'Poppins',
+                                    color: FlutterFlowTheme.of(context).white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                        );
+                      })),
                 ),
               ],
             ),
@@ -193,6 +174,7 @@ class Trip {
   dynamic lastTimes;
   String lastStateType;
   String currentStateType = 'paused';
+  String _status = 'paused';
 
   Timer tripTimer;
 
@@ -205,6 +187,7 @@ class Trip {
     _parseLog();
     lastStateType = tripLog.first['status'];
     currentStateType = lastStateType;
+    _status = 'paused';
 
     //tripTimes = TripTimes();
 
@@ -218,6 +201,10 @@ class Trip {
 
     tripTimer =
         Timer.periodic(const Duration(seconds: 1), (timer) => _updateTrip());
+  }
+
+  stop() {
+    tripTimer.cancel();
   }
 
   // Formatea Duration como hh:mm:ss
@@ -241,8 +228,20 @@ class Trip {
     }
   }
 
+  setStatus(onRoute) {
+    if (onRoute == true) {
+      _status = 'route';
+    } else {
+      _status = 'paused';
+    }
+  }
+
+  _getRTState() {
+    return _status;
+  }
+
   _updateTrip() {
-    currentStateType = FFAppState().tripStatus['status'];
+    currentStateType = _getRTState();
     _acumTimes(currentStateType);
     tripNotifier.value = outTimes;
     tripNotifier.notifyListeners();

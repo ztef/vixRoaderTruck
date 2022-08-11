@@ -6,3 +6,5 @@ export 'set_pause.dart' show setPause;
 export 'set_start.dart' show setStart;
 export 'update_remote_log.dart' show updateRemoteLog;
 export 'set_geo_data.dart' show setGeoData;
+export 'zoom_level.dart' show zoomLevel;
+export 'set_tilt_level.dart' show setTiltLevel;

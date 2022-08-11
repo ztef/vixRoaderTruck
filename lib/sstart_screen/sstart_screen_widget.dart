@@ -39,9 +39,9 @@ class _SstartScreenWidgetState extends State<SstartScreenWidget> {
         decoration: BoxDecoration(
           color: Color(0xFFEEEEEE),
           image: DecorationImage(
-            fit: BoxFit.fitWidth,
+            fit: BoxFit.cover,
             image: Image.asset(
-              'assets/images/wavesMiddle@3x.png',
+              'assets/images/trailer_fondo_(1).jpeg',
             ).image,
           ),
         ),
@@ -57,7 +57,7 @@ class _SstartScreenWidgetState extends State<SstartScreenWidget> {
                   padding: EdgeInsetsDirectional.fromSTEB(0, 70, 0, 90),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Image.asset(
@@ -73,7 +73,9 @@ class _SstartScreenWidgetState extends State<SstartScreenWidget> {
                             'vix ROADER',
                             style: FlutterFlowTheme.of(context).title1.override(
                                   fontFamily: 'Poppins',
-                                  color: Colors.yellow,
+                                  color: FlutterFlowTheme.of(context)
+                                      .backgroundComponents,
+                                  fontSize: 20,
                                 ),
                           ),
                           Text(
@@ -81,7 +83,9 @@ class _SstartScreenWidgetState extends State<SstartScreenWidget> {
                             style:
                                 FlutterFlowTheme.of(context).bodyText1.override(
                                       fontFamily: 'Poppins',
-                                      color: Color(0xFFFFEBEE),
+                                      color: FlutterFlowTheme.of(context)
+                                          .backgroundComponents,
+                                      fontSize: 11,
                                     ),
                           ),
                         ],
@@ -100,11 +104,11 @@ class _SstartScreenWidgetState extends State<SstartScreenWidget> {
                           controller: emailAddressController,
                           obscureText: false,
                           decoration: InputDecoration(
-                            labelText: 'Email Address',
+                            labelText: 'Correo electrónico',
                             labelStyle:
                                 FlutterFlowTheme.of(context).bodyText1.override(
                                       fontFamily: 'Lexend Deca',
-                                      color: Color(0xFF95A1AC),
+                                      color: Color(0xFF4A4A4A),
                                       fontSize: 14,
                                       fontWeight: FontWeight.normal,
                                     ),
@@ -158,11 +162,11 @@ class _SstartScreenWidgetState extends State<SstartScreenWidget> {
                           controller: passwordController,
                           obscureText: !passwordVisibility,
                           decoration: InputDecoration(
-                            labelText: 'Password',
+                            labelText: 'Contraseña',
                             labelStyle:
                                 FlutterFlowTheme.of(context).bodyText1.override(
                                       fontFamily: 'Lexend Deca',
-                                      color: Color(0xFF95A1AC),
+                                      color: Color(0xFF4A4A4A),
                                       fontSize: 14,
                                       fontWeight: FontWeight.normal,
                                     ),
@@ -218,11 +222,16 @@ class _SstartScreenWidgetState extends State<SstartScreenWidget> {
                     ],
                   ),
                 ),
+                Divider(
+                  height: 30,
+                  thickness: 1,
+                  color: Colors.black,
+                ),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       FFButtonWidget(
                         onPressed: () async {
@@ -243,7 +252,7 @@ class _SstartScreenWidgetState extends State<SstartScreenWidget> {
                             (r) => false,
                           );
                         },
-                        text: 'Login',
+                        text: 'Entrar',
                         options: FFButtonOptions(
                           width: 130,
                           height: 60,
@@ -263,12 +272,26 @@ class _SstartScreenWidgetState extends State<SstartScreenWidget> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
+                    ],
+                  ),
+                ),
+                Divider(
+                  height: 40,
+                  thickness: 1,
+                  color: Colors.black,
+                ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 24),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
                       Expanded(
                         child: FFButtonWidget(
                           onPressed: () {
                             print('Button-ForgotPassword pressed ...');
                           },
-                          text: 'Recupera tu Password',
+                          text: 'Recupera  contraseña',
                           options: FFButtonOptions(
                             width: 170,
                             height: 30,
@@ -276,8 +299,9 @@ class _SstartScreenWidgetState extends State<SstartScreenWidget> {
                             textStyle:
                                 FlutterFlowTheme.of(context).subtitle2.override(
                                       fontFamily: 'Lexend Deca',
-                                      color: Colors.white,
-                                      fontSize: 14,
+                                      color: FlutterFlowTheme.of(context)
+                                          .backgroundComponents,
+                                      fontSize: 12,
                                       fontWeight: FontWeight.w500,
                                     ),
                             elevation: 0,
@@ -288,24 +312,6 @@ class _SstartScreenWidgetState extends State<SstartScreenWidget> {
                             borderRadius: BorderRadius.circular(0),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 24),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '¿ Aún no tienes cuenta ?',
-                        style: FlutterFlowTheme.of(context).bodyText1.override(
-                              fontFamily: 'Lexend Deca',
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.normal,
-                            ),
                       ),
                       Expanded(
                         child: FFButtonWidget(
@@ -322,15 +328,16 @@ class _SstartScreenWidgetState extends State<SstartScreenWidget> {
                           },
                           text: 'Registrate',
                           options: FFButtonOptions(
-                            width: 90,
+                            width: 50,
                             height: 30,
                             color: Color(0x00FFFFFF),
                             textStyle:
                                 FlutterFlowTheme.of(context).subtitle2.override(
                                       fontFamily: 'Lexend Deca',
-                                      color: Color(0xFF39D2C0),
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
+                                      color: FlutterFlowTheme.of(context)
+                                          .backgroundComponents,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
                                     ),
                             elevation: 0,
                             borderSide: BorderSide(
@@ -343,6 +350,21 @@ class _SstartScreenWidgetState extends State<SstartScreenWidget> {
                       ),
                     ],
                   ),
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Text(
+                      '¿ Aún no tienes cuenta ?',
+                      style: FlutterFlowTheme.of(context).bodyText1.override(
+                            fontFamily: 'Lexend Deca',
+                            color: FlutterFlowTheme.of(context)
+                                .backgroundComponents,
+                            fontSize: 12,
+                            fontWeight: FontWeight.normal,
+                          ),
+                    ),
+                  ],
                 ),
               ],
             ),

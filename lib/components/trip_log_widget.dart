@@ -16,7 +16,7 @@ class _TripLogWidgetState extends State<TripLogWidget> {
   Widget build(BuildContext context) {
     return Builder(
       builder: (context) {
-        final logRecords = FFAppState().tripLog?.toList() ?? [];
+        final logRecords = FFAppState().tripLog.toList();
         return ListView.builder(
           padding: EdgeInsets.zero,
           primary: false,

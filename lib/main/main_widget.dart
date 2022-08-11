@@ -3,17 +3,19 @@ import '../backend/backend.dart';
 import '../components/current_trip_widget.dart';
 import '../components/new_trip_button_widget.dart';
 import '../components/trip_log_view_widget.dart';
+import '../components/trip_navigator_widget.dart';
 import '../components/trip_options_buttons_widget.dart';
+import '../config_screen/config_screen_widget.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
-import '../main_map/main_map_widget.dart';
 import '../my_trips_screen/my_trips_screen_widget.dart';
 import '../profile_screen/profile_screen_widget.dart';
 import '../share_with_settings/share_with_settings_widget.dart';
 import '../sstart_screen/sstart_screen_widget.dart';
-import '../custom_code/widgets/index.dart' as custom_widgets;
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -26,6 +28,15 @@ class MainWidget extends StatefulWidget {
 
 class _MainWidgetState extends State<MainWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      setState(() => FFAppState().activeTrip = currentUserDocument?.trip);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,17 +61,8 @@ class _MainWidgetState extends State<MainWidget> {
           appBar: AppBar(
             backgroundColor: FlutterFlowTheme.of(context).primaryColor,
             automaticallyImplyLeading: true,
-            title: Text(
-              'vix Roader ',
-              style: FlutterFlowTheme.of(context).title2.override(
-                    fontFamily: 'Poppins',
-                    color: Colors.white,
-                    fontSize: 22,
-                  ),
-            ),
             actions: [],
-            centerTitle: false,
-            elevation: 2,
+            centerTitle: true,
           ),
           backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
           drawer: Drawer(
@@ -68,146 +70,183 @@ class _MainWidgetState extends State<MainWidget> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Image.asset(
-                  'assets/images/unnamed.png',
+                Container(
                   width: double.infinity,
-                  height: 200,
-                  fit: BoxFit.cover,
-                ),
-                Align(
-                  alignment: AlignmentDirectional(-0.95, 0),
-                  child: Text(
-                    'vixRoaderTruck 0.3',
-                    style: TextStyle(
-                      color: FlutterFlowTheme.of(context).grayIcon,
-                      fontWeight: FontWeight.w300,
+                  height: MediaQuery.of(context).size.height * 1,
+                  decoration: BoxDecoration(
+                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: Image.asset(
+                        'assets/images/trailer_fondo_blur.png',
+                      ).image,
                     ),
                   ),
-                ),
-                InkWell(
-                  onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MyTripsScreenWidget(),
-                      ),
-                    );
-                  },
-                  child: ListTile(
-                    title: Text(
-                      'Mis Viajes',
-                      style: FlutterFlowTheme.of(context).title3.override(
-                            fontFamily: 'Poppins',
-                            color: Colors.black,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/unnamed.png',
+                            width: 180,
+                            fit: BoxFit.cover,
                           ),
-                    ),
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      color: Color(0xFF303030),
-                      size: 20,
-                    ),
-                    tileColor: Color(0xFFF5F5F5),
-                    dense: false,
-                  ),
-                ),
-                InkWell(
-                  onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProfileScreenWidget(),
-                      ),
-                    );
-                  },
-                  child: ListTile(
-                    title: Text(
-                      'Mis Datos',
-                      style: FlutterFlowTheme.of(context).title3.override(
-                            fontFamily: 'Poppins',
-                            color: Colors.black,
+                          Align(
+                            alignment: AlignmentDirectional(0, 0),
+                            child: Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 15),
+                              child: Text(
+                                'vixRoaderTruck',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
                           ),
-                    ),
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      color: Color(0xFF303030),
-                      size: 20,
-                    ),
-                    tileColor: Color(0xFFF5F5F5),
-                    dense: false,
-                  ),
-                ),
-                InkWell(
-                  onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ShareWithSettingsWidget(),
+                        ],
                       ),
-                    );
-                  },
-                  child: ListTile(
-                    title: Text(
-                      'Compartir Viajes',
-                      style: FlutterFlowTheme.of(context).title3.override(
-                            fontFamily: 'Poppins',
-                            color: Colors.black,
-                          ),
-                    ),
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      color: Color(0xFF303030),
-                      size: 20,
-                    ),
-                    tileColor: Color(0xFFF5F5F5),
-                    dense: false,
-                  ),
-                ),
-                Divider(),
-                InkWell(
-                  onTap: () async {
-                    await signOut();
-                    await Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SstartScreenWidget(),
+                      Divider(
+                        height: 10,
+                        thickness: 1,
+                        color: Colors.black,
                       ),
-                      (r) => false,
-                    );
-                  },
-                  child: ListTile(
-                    title: Text(
-                      'Salir',
-                      style: FlutterFlowTheme.of(context).title3.override(
-                            fontFamily: 'Poppins',
-                            color: Colors.black,
+                      InkWell(
+                        onTap: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MyTripsScreenWidget(),
+                            ),
+                          );
+                        },
+                        child: ListTile(
+                          title: Text(
+                            'Mis Viajes',
+                            style: FlutterFlowTheme.of(context).title3.override(
+                                  fontFamily: 'Poppins',
+                                  color: Colors.black,
+                                ),
                           ),
-                    ),
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      color: Color(0xFF303030),
-                      size: 20,
-                    ),
-                    tileColor: Color(0xFFF5F5F5),
-                    dense: false,
+                          trailing: Icon(
+                            Icons.arrow_forward_ios,
+                            color: Color(0xFF303030),
+                            size: 20,
+                          ),
+                          tileColor: Color(0xFFF5F5F5),
+                          dense: false,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ShareWithSettingsWidget(),
+                            ),
+                          );
+                        },
+                        child: ListTile(
+                          title: Text(
+                            'Compartir Viajes',
+                            style: FlutterFlowTheme.of(context).title3.override(
+                                  fontFamily: 'Poppins',
+                                  color: Colors.black,
+                                ),
+                          ),
+                          trailing: Icon(
+                            Icons.arrow_forward_ios,
+                            color: Color(0xFF303030),
+                            size: 20,
+                          ),
+                          tileColor: Color(0xFFF5F5F5),
+                          dense: false,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProfileScreenWidget(),
+                            ),
+                          );
+                        },
+                        child: ListTile(
+                          title: Text(
+                            'Mis Datos',
+                            style: FlutterFlowTheme.of(context).title3.override(
+                                  fontFamily: 'Poppins',
+                                  color: Colors.black,
+                                ),
+                          ),
+                          trailing: Icon(
+                            Icons.arrow_forward_ios,
+                            color: Color(0xFF303030),
+                            size: 20,
+                          ),
+                          tileColor: Color(0xFFF5F5F5),
+                          dense: false,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ConfigScreenWidget(),
+                            ),
+                          );
+                        },
+                        child: ListTile(
+                          title: Text(
+                            'Configuración',
+                            style: FlutterFlowTheme.of(context).title3,
+                          ),
+                          trailing: Icon(
+                            Icons.arrow_forward_ios,
+                            color: Color(0xFF303030),
+                            size: 20,
+                          ),
+                          tileColor: Color(0xFFF5F5F5),
+                          dense: false,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          await signOut();
+                          await Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SstartScreenWidget(),
+                            ),
+                            (r) => false,
+                          );
+                        },
+                        child: ListTile(
+                          title: Text(
+                            'Salir',
+                            style: FlutterFlowTheme.of(context).title3.override(
+                                  fontFamily: 'Poppins',
+                                  color: Colors.black,
+                                ),
+                          ),
+                          trailing: Icon(
+                            Icons.arrow_forward_ios,
+                            color: Color(0xFF303030),
+                            size: 20,
+                          ),
+                          tileColor: Color(0xFFF5F5F5),
+                          dense: false,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                Divider(),
-                ListTile(
-                  title: Text(
-                    'Configuración',
-                    style: FlutterFlowTheme.of(context).title3,
-                  ),
-                  subtitle: Text(
-                    'Configuración y Privacidad',
-                    style: FlutterFlowTheme.of(context).bodyText2,
-                  ),
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    color: Color(0xFF303030),
-                    size: 20,
-                  ),
-                  tileColor: Color(0xFFF5F5F5),
-                  dense: false,
                 ),
               ],
             ),
@@ -227,75 +266,93 @@ class _MainWidgetState extends State<MainWidget> {
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          if (!(mainUsersRecord.onTrip) ?? true)
+                          if (!mainUsersRecord.onTrip)
                             Container(
                               width: 100,
-                              height: 25,
+                              height: 30,
                               decoration: BoxDecoration(
                                 color: Colors.red,
+                                shape: BoxShape.rectangle,
                               ),
-                              child: Text(
-                                'Sin Viaje',
-                                style: FlutterFlowTheme.of(context).bodyText1,
+                              child: Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
+                                child: Text(
+                                  'Sin Viaje',
+                                  textAlign: TextAlign.center,
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyText1
+                                      .override(
+                                        fontFamily: 'Poppins',
+                                        color: Colors.white,
+                                      ),
+                                ),
                               ),
                             ),
                           if (mainUsersRecord.onTrip ?? true)
                             Container(
                               width: 100,
-                              height: 25,
+                              height: 30,
                               decoration: BoxDecoration(
                                 color:
                                     FlutterFlowTheme.of(context).customColor1,
                               ),
-                              child: Text(
-                                'En Viaje',
-                                style: FlutterFlowTheme.of(context).bodyText1,
+                              child: Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
+                                child: Text(
+                                  'En Viaje',
+                                  textAlign: TextAlign.center,
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyText1
+                                      .override(
+                                        fontFamily: 'Poppins',
+                                        color: Colors.white,
+                                      ),
+                                ),
                               ),
                             ),
                           FlutterFlowIconButton(
                             borderColor: Colors.transparent,
-                            borderRadius: 30,
                             borderWidth: 1,
-                            buttonSize: 40,
+                            buttonSize: 50,
                             icon: FaIcon(
                               FontAwesomeIcons.mapMarkedAlt,
-                              color: FlutterFlowTheme.of(context).primaryText,
+                              color: Color(0xFF252EDC),
                               size: 30,
                             ),
                             onPressed: () async {
-                              await Navigator.push(
-                                context,
-                                PageTransition(
-                                  type: PageTransitionType.bottomToTop,
-                                  duration: Duration(milliseconds: 300),
-                                  reverseDuration: Duration(milliseconds: 300),
-                                  child: MainMapWidget(),
-                                ),
+                              await showModalBottomSheet(
+                                isScrollControlled: true,
+                                backgroundColor: FlutterFlowTheme.of(context)
+                                    .primaryBackground,
+                                context: context,
+                                builder: (context) {
+                                  return Padding(
+                                    padding: MediaQuery.of(context).viewInsets,
+                                    child: Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.7,
+                                      child: TripNavigatorWidget(),
+                                    ),
+                                  );
+                                },
                               );
                             },
                           ),
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 10),
-                      child: Container(
-                        width: double.infinity,
-                        height: 50,
-                        child: custom_widgets.GetPos(
-                          width: double.infinity,
-                          height: 50,
-                        ),
-                      ),
-                    ),
                     if (mainUsersRecord.onTrip ?? true)
                       CurrentTripWidget(
-                        trip: FFAppState().activeTrip,
+                        trip: mainUsersRecord.trip,
                       ),
-                    if (!(mainUsersRecord.onTrip) ?? true)
-                      NewTripButtonWidget(),
+                    if (!mainUsersRecord.onTrip) NewTripButtonWidget(),
                     if (mainUsersRecord.onTrip ?? true)
-                      TripOptionsButtonsWidget(),
+                      TripOptionsButtonsWidget(
+                        trip: mainUsersRecord.trip,
+                      ),
                     if (mainUsersRecord.onTrip ?? true)
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),

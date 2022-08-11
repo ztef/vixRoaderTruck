@@ -36,6 +36,12 @@ class _ElapsedTimeState extends State<ElapsedTime> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    timer.cancel();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Text(
       _elapsedTime(widget.fecha),
