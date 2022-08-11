@@ -5,10 +5,10 @@ import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 import '../main/main_widget.dart';
-import '../new_trip_destination/new_trip_destination_widget.dart';
+import '../set_origin_dest/set_origin_dest_widget.dart';
 import '../trip_detail/trip_detail_widget.dart';
-import '../custom_code/widgets/index.dart' as custom_widgets;
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyTripsScreenWidget extends StatefulWidget {
@@ -66,26 +66,30 @@ class _MyTripsScreenWidgetState extends State<MyTripsScreenWidget> {
         centerTitle: false,
         elevation: 2,
       ),
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print('FloatingActionButton pressed ...');
-        },
-        backgroundColor: Colors.red,
-        elevation: 8,
-        child: InkWell(
-          onTap: () async {
-            await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => NewTripDestinationWidget(),
-              ),
-            );
-          },
-          child: Icon(
-            Icons.add_circle,
-            color: Colors.black,
-            size: 35,
+      floatingActionButton: Visibility(
+        visible: !valueOrDefault<bool>(currentUserDocument?.onTrip, false),
+        child: AuthUserStreamWidget(
+          child: FloatingActionButton.extended(
+            onPressed: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SetOriginDestWidget(),
+                ),
+              );
+            },
+            backgroundColor: FlutterFlowTheme.of(context).primaryColor,
+            icon: FaIcon(
+              FontAwesomeIcons.plus,
+            ),
+            elevation: 5,
+            label: Text(
+              'Iniciar Nuevo',
+              style: FlutterFlowTheme.of(context).bodyText1.override(
+                    fontFamily: 'Poppins',
+                    color: FlutterFlowTheme.of(context).white,
+                  ),
+            ),
           ),
         ),
       ),
@@ -115,13 +119,12 @@ class _MyTripsScreenWidgetState extends State<MyTripsScreenWidget> {
                     ],
                   ),
                   child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(20, 4, 20, 0),
+                    padding: EdgeInsetsDirectional.fromSTEB(20, 6, 20, 4),
                     child: TextFormField(
                       controller: searchFieldController,
                       obscureText: false,
                       decoration: InputDecoration(
-                        labelText: 'Search for classes...',
-                        hintText: 'Search by name, location etc...',
+                        labelText: 'Buscar...',
                         hintStyle: FlutterFlowTheme.of(context).bodyText2,
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
@@ -180,17 +183,17 @@ class _MyTripsScreenWidgetState extends State<MyTripsScreenWidget> {
                     final listViewTripsRecord =
                         listViewTripsRecordList[listViewIndex];
                     return Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 20),
+                      padding: EdgeInsetsDirectional.fromSTEB(16, 6, 16, 0),
                       child: Container(
                         width: double.infinity,
-                        height: 184,
+                        height: 144,
                         decoration: BoxDecoration(
                           color:
                               FlutterFlowTheme.of(context).secondaryBackground,
                           image: DecorationImage(
-                            fit: BoxFit.fitWidth,
+                            fit: BoxFit.fill,
                             image: Image.asset(
-                              'assets/images/truck.jpg',
+                              'assets/images/trailer_fondo_blur.png',
                             ).image,
                           ),
                           boxShadow: [
@@ -204,153 +207,152 @@ class _MyTripsScreenWidgetState extends State<MyTripsScreenWidget> {
                         ),
                         child: Container(
                           width: 100,
-                          height: 100,
+                          height: 80,
                           decoration: BoxDecoration(
-                            color: Color(0x65090F13),
+                            color: Color(0x00090F13),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 2),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      16, 16, 16, 0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          listViewTripsRecord.destination,
-                                          style: FlutterFlowTheme.of(context)
-                                              .title1
-                                              .override(
-                                                fontFamily: 'Lexend Deca',
-                                                color: Colors.white,
-                                                fontSize: 24,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                        ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    16, 16, 16, 0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        listViewTripsRecord.destination,
+                                        style: FlutterFlowTheme.of(context)
+                                            .subtitle1,
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
+                              ),
+                              if (valueOrDefault<bool>(
+                                  currentUserDocument?.onTrip, false))
                                 Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       16, 4, 16, 0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Container(
-                                        width: 100,
-                                        height: 25,
-                                        child: custom_widgets.TripStatusWidget(
-                                          width: 100,
-                                          height: 25,
-                                          trip: listViewTripsRecord,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        16, 4, 16, 16),
+                                  child: AuthUserStreamWidget(
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
                                       children: [
-                                        FFButtonWidget(
-                                          onPressed: () async {
-                                            setState(() => FFAppState()
-                                                    .selectedTrip =
-                                                listViewTripsRecord.reference);
-                                            await Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    TripDetailWidget(),
-                                              ),
-                                            );
-                                          },
-                                          text: 'Detalles',
-                                          icon: Icon(
-                                            Icons.add_rounded,
-                                            color: Colors.white,
-                                            size: 15,
-                                          ),
-                                          options: FFButtonOptions(
-                                            width: 120,
-                                            height: 40,
-                                            color: Color(0xFF39D2C0),
-                                            textStyle: GoogleFonts.getFont(
-                                              'Lexend Deca',
-                                              color: Colors.white,
-                                              fontSize: 14,
-                                            ),
-                                            elevation: 3,
-                                            borderSide: BorderSide(
-                                              color: Colors.transparent,
-                                              width: 1,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(0, 0, 0, 4),
-                                                child: Text(
-                                                  dateTimeFormat('Hm',
-                                                      listViewTripsRecord.date),
-                                                  style: FlutterFlowTheme.of(
+                                        if (listViewTripsRecord.reference ==
+                                            currentUserDocument?.trip)
+                                          Text(
+                                            'En Curso',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyText1
+                                                .override(
+                                                  fontFamily: 'Poppins',
+                                                  color: FlutterFlowTheme.of(
                                                           context)
-                                                      .title3
-                                                      .override(
-                                                        fontFamily:
-                                                            'Lexend Deca',
-                                                        color: Colors.white,
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
+                                                      .customColor3,
                                                 ),
-                                              ),
-                                              Text(
-                                                dateTimeFormat('d/M/y',
-                                                    listViewTripsRecord.date),
-                                                textAlign: TextAlign.end,
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyText1
-                                                    .override(
-                                                      fontFamily: 'Lexend Deca',
-                                                      color: Color(0xB4FFFFFF),
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                    ),
-                                              ),
-                                            ],
                                           ),
-                                        ),
                                       ],
                                     ),
                                   ),
                                 ),
-                              ],
-                            ),
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      16, 4, 16, 0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      FFButtonWidget(
+                                        onPressed: () async {
+                                          setState(() => FFAppState()
+                                                  .selectedTrip =
+                                              listViewTripsRecord.reference);
+                                          await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  TripDetailWidget(),
+                                            ),
+                                          );
+                                        },
+                                        text: 'Detalles',
+                                        icon: Icon(
+                                          Icons.featured_play_list,
+                                          color: Colors.white,
+                                          size: 15,
+                                        ),
+                                        options: FFButtonOptions(
+                                          width: 120,
+                                          height: 40,
+                                          color: Color(0xFF252EDC),
+                                          textStyle: GoogleFonts.getFont(
+                                            'Lexend Deca',
+                                            color: Colors.white,
+                                            fontSize: 14,
+                                          ),
+                                          elevation: 3,
+                                          borderSide: BorderSide(
+                                            color: Colors.transparent,
+                                            width: 1,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(0, 0, 0, 4),
+                                              child: Text(
+                                                dateTimeFormat('Hm',
+                                                    listViewTripsRecord.date),
+                                                style:
+                                                    FlutterFlowTheme.of(context)
+                                                        .title3
+                                                        .override(
+                                                          fontFamily:
+                                                              'Lexend Deca',
+                                                          color: Colors.black,
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                              ),
+                                            ),
+                                            Text(
+                                              dateTimeFormat('d/M/y',
+                                                  listViewTripsRecord.date),
+                                              textAlign: TextAlign.end,
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .bodyText1
+                                                  .override(
+                                                    fontFamily: 'Lexend Deca',
+                                                    color: Color(0xB4000000),
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),

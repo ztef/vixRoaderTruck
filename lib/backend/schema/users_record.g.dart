@@ -85,6 +85,14 @@ class _$UsersRecordSerializer implements StructuredSerializer<UsersRecord> {
         ..add(
             serializers.serialize(value, specifiedType: const FullType(bool)));
     }
+    value = object.trip;
+    if (value != null) {
+      result
+        ..add('trip')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(
+                DocumentReference, const [const FullType(Object)])));
+    }
     value = object.reference;
     if (value != null) {
       result
@@ -148,6 +156,12 @@ class _$UsersRecordSerializer implements StructuredSerializer<UsersRecord> {
           result.onTrip = serializers.deserialize(value,
               specifiedType: const FullType(bool)) as bool;
           break;
+        case 'trip':
+          result.trip = serializers.deserialize(value,
+                  specifiedType: const FullType(
+                      DocumentReference, const [const FullType(Object)]))
+              as DocumentReference<Object>;
+          break;
         case 'Document__Reference__Field':
           result.reference = serializers.deserialize(value,
                   specifiedType: const FullType(
@@ -181,10 +195,12 @@ class _$UsersRecord extends UsersRecord {
   @override
   final bool onTrip;
   @override
+  final DocumentReference<Object> trip;
+  @override
   final DocumentReference<Object> reference;
 
   factory _$UsersRecord([void Function(UsersRecordBuilder) updates]) =>
-      (new UsersRecordBuilder()..update(updates)).build();
+      (new UsersRecordBuilder()..update(updates))._build();
 
   _$UsersRecord._(
       {this.email,
@@ -196,6 +212,7 @@ class _$UsersRecord extends UsersRecord {
       this.trips,
       this.shareTripsWith,
       this.onTrip,
+      this.trip,
       this.reference})
       : super._();
 
@@ -219,6 +236,7 @@ class _$UsersRecord extends UsersRecord {
         trips == other.trips &&
         shareTripsWith == other.shareTripsWith &&
         onTrip == other.onTrip &&
+        trip == other.trip &&
         reference == other.reference;
   }
 
@@ -232,21 +250,23 @@ class _$UsersRecord extends UsersRecord {
                         $jc(
                             $jc(
                                 $jc(
-                                    $jc($jc(0, email.hashCode),
-                                        displayName.hashCode),
-                                    photoUrl.hashCode),
-                                uid.hashCode),
-                            createdTime.hashCode),
-                        phoneNumber.hashCode),
-                    trips.hashCode),
-                shareTripsWith.hashCode),
-            onTrip.hashCode),
+                                    $jc(
+                                        $jc($jc(0, email.hashCode),
+                                            displayName.hashCode),
+                                        photoUrl.hashCode),
+                                    uid.hashCode),
+                                createdTime.hashCode),
+                            phoneNumber.hashCode),
+                        trips.hashCode),
+                    shareTripsWith.hashCode),
+                onTrip.hashCode),
+            trip.hashCode),
         reference.hashCode));
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('UsersRecord')
+    return (newBuiltValueToStringHelper(r'UsersRecord')
           ..add('email', email)
           ..add('displayName', displayName)
           ..add('photoUrl', photoUrl)
@@ -256,6 +276,7 @@ class _$UsersRecord extends UsersRecord {
           ..add('trips', trips)
           ..add('shareTripsWith', shareTripsWith)
           ..add('onTrip', onTrip)
+          ..add('trip', trip)
           ..add('reference', reference))
         .toString();
   }
@@ -303,6 +324,10 @@ class UsersRecordBuilder implements Builder<UsersRecord, UsersRecordBuilder> {
   bool get onTrip => _$this._onTrip;
   set onTrip(bool onTrip) => _$this._onTrip = onTrip;
 
+  DocumentReference<Object> _trip;
+  DocumentReference<Object> get trip => _$this._trip;
+  set trip(DocumentReference<Object> trip) => _$this._trip = trip;
+
   DocumentReference<Object> _reference;
   DocumentReference<Object> get reference => _$this._reference;
   set reference(DocumentReference<Object> reference) =>
@@ -324,6 +349,7 @@ class UsersRecordBuilder implements Builder<UsersRecord, UsersRecordBuilder> {
       _trips = $v.trips?.toBuilder();
       _shareTripsWith = $v.shareTripsWith;
       _onTrip = $v.onTrip;
+      _trip = $v.trip;
       _reference = $v.reference;
       _$v = null;
     }
@@ -342,7 +368,9 @@ class UsersRecordBuilder implements Builder<UsersRecord, UsersRecordBuilder> {
   }
 
   @override
-  _$UsersRecord build() {
+  UsersRecord build() => _build();
+
+  _$UsersRecord _build() {
     _$UsersRecord _$result;
     try {
       _$result = _$v ??
@@ -356,6 +384,7 @@ class UsersRecordBuilder implements Builder<UsersRecord, UsersRecordBuilder> {
               trips: _trips?.build(),
               shareTripsWith: shareTripsWith,
               onTrip: onTrip,
+              trip: trip,
               reference: reference);
     } catch (_) {
       String _$failedField;
@@ -364,7 +393,7 @@ class UsersRecordBuilder implements Builder<UsersRecord, UsersRecordBuilder> {
         _trips?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'UsersRecord', _$failedField, e.toString());
+            r'UsersRecord', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -373,4 +402,4 @@ class UsersRecordBuilder implements Builder<UsersRecord, UsersRecordBuilder> {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,deprecated_member_use_from_same_package,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,deprecated_member_use_from_same_package,lines_longer_than_80_chars,no_leading_underscores_for_local_identifiers,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new,unnecessary_lambdas
